@@ -6,7 +6,6 @@ import Hero from "../components/Hero";
 import SectionTitle from "../components/SectionTitle";
 import CategoryCard from "../components/CategoryCard";
 import ProductCard from "../components/ProductCard";
-import Newsletter from "../components/Newsletter";
 import PerfectFitSection from '../components/PerfectFitSection';
 import { collections, featuredProducts, perfectFitImages, shopByCategories } from "../data/products";
 import { useState } from 'react';
@@ -66,8 +65,6 @@ export default function Home() {
       {/* Perfect Fit Garments Section */}
       <PerfectFitSection images={perfectFitImages[activeCollection]} />
 
-      {/* Newsletter Section */}
-      <Newsletter />
     </Layout>
   );
 }

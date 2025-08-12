@@ -2,9 +2,12 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
+import FeatureBar from './FeatureBar';
 
 export default function Footer() {
   return (
+    <>
+    <FeatureBar />
     <footer className="bg-[#56193F] text-white/90 font-light">
       <div className="container max-w-[1324px] mx-auto px-4 pt-16 pb-8">
         {/* Top section with links */}
@@ -47,10 +50,10 @@ export default function Footer() {
 
       {/* Bottom section with copyright and social */}
       <div className="border-t border-white/20 mt-8">
-        <div className="container max-w-[1324px] mx-auto px-4 py-6 flex flex-col md:flex-row justify-between items-center text-xs">
+        <div className="container max-w-[1324px] mx-auto px-4 py-6 flex flex-col md:flex-row justify-between items-start text-xs">
           
           {/* Left side: Social Icons and Copyright */}
-          <div className="flex flex-col md:flex-row items-center gap-4 md:gap-6 w-full md:w-auto text-center md:text-left">
+          <div className="flex flex-col md:flex-col items-start gap-4 md:gap-6 w-full md:w-auto text-left md:text-left">
             <div className="flex items-center gap-4 order-1 md:order-2 mb-4 md:mb-0">
               <a href="https://x.com" target="_blank" rel="noopener noreferrer" aria-label="X" className="hover:text-white">
                 <svg className="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
@@ -77,5 +80,6 @@ export default function Footer() {
         </div>
       </div>
     </footer>
+    </>
   );
 }

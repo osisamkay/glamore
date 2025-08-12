@@ -17,7 +17,7 @@ export default function Hero() {
   }, []);
 
   return (
-    <div className="relative w-full max-w-[1324px] mx-auto h-[850px] mt-32 rounded-2xl overflow-hidden">
+    <div className="relative w-full max-w-[1324px] mx-auto h-[850px] mt-43 rounded-2xl overflow-hidden">
       <div className="grid grid-cols-4 h-full">
         <div className="col-span-4 relative">
           {heroImages.map((src, index) => (

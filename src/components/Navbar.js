@@ -8,7 +8,7 @@ export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
-    <nav className="fixed top-0 left-0 right-0 w-full z-50 bg-[#56193F] shadow-lg">
+    <nav className="fixed top-0 left-0 right-0 w-full z-50 bg-[#56193F]">
       <div className="container max-w-[1440px] mx-auto px-6">
         <div className="flex justify-between items-center py-4">
           {/* Left side: Hamburger Menu Icon */}
