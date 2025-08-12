@@ -16,7 +16,7 @@ export default function Footer() {
 
           {/* Column 2 - Showroom */}
           <div>
-            <h3 className="font-semibold uppercase tracking-wider mb-4 text-white">Showroom By Appointment Only</h3>
+            <h3 className="uppercase tracking-wider mb-4 text-white">Showroom By Appointment Only</h3>
             <div className="space-y-1">
               <p>1234 Cookie Rd, Toronto, ON, L9T 2S4</p>
               <p>+1 (120) 790 8888</p>
@@ -25,7 +25,7 @@ export default function Footer() {
 
           {/* Column 3 - Quick Links */}
           <div>
-            <h3 className="font-semibold uppercase tracking-wider mb-4 text-white">Quick Links</h3>
+            <h3 className="uppercase tracking-wider mb-4 text-white">Quick Links</h3>
             <ul className="space-y-2">
               <li><Link href="/contact" className="hover:underline">Contact Us</Link></li>
               <li><Link href="/about" className="hover:underline">About</Link></li>
@@ -34,7 +34,7 @@ export default function Footer() {
 
           {/* Column 4 - More */}
           <div>
-            <h3 className="font-semibold uppercase tracking-wider mb-4 text-white">More</h3>
+            <h3 className="uppercase tracking-wider mb-4 text-white">More</h3>
             <ul className="space-y-2">
               <li><Link href="/privacy-policy" className="hover:underline">Privacy Policy</Link></li>
               <li><Link href="/refund-policy" className="hover:underline">Refund Policy</Link></li>
@@ -47,11 +47,11 @@ export default function Footer() {
 
       {/* Bottom section with copyright and social */}
       <div className="border-t border-white/20 mt-8">
-        <div className="container max-w-[1324px] mx-auto px-4 py-6 flex justify-between items-center text-xs">
-          {/* Left side */}
-          <div className="flex items-center gap-6">
-            <p className="tracking-wider">&copy; 2025 - GLAMOURGLOWFASHION INC.</p>
-            <div className="flex items-center gap-4">
+        <div className="container max-w-[1324px] mx-auto px-4 py-6 flex flex-col md:flex-row justify-between items-center text-xs">
+          
+          {/* Left side: Social Icons and Copyright */}
+          <div className="flex flex-col md:flex-row items-center gap-4 md:gap-6 w-full md:w-auto text-center md:text-left">
+            <div className="flex items-center gap-4 order-1 md:order-2 mb-4 md:mb-0">
               <a href="https://x.com" target="_blank" rel="noopener noreferrer" aria-label="X" className="hover:text-white">
                 <svg className="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
               </a>
@@ -65,10 +65,11 @@ export default function Footer() {
                 <svg className="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M4.98 3.5c0 1.381-1.11 2.5-2.48 2.5s-2.48-1.119-2.48-2.5c0-1.38 1.11-2.5 2.48-2.5s2.48 1.12 2.48 2.5zm.02 4.5h-5v16h5v-16zm7.982 0h-4.968v16h4.969v-8.399c0-4.67 6.029-5.052 6.029 0v8.399h4.988v-10.131c0-7.88-8.922-7.593-11.018-3.714v-2.155z"/></svg>
               </a>
             </div>
+             <p className="tracking-wider order-2 md:order-1">&copy; 2025 - GLAMOURGLOWFASHION INC.</p>
           </div>
 
-          {/* Right side */}
-          <div className="flex items-center gap-2">
+          {/* Right side: Language Switcher */}
+          <div className="flex items-center gap-2 mt-4 md:mt-0">
             <button className="hover:underline">English</button>
             <span>|</span>
             <button className="hover:underline">Français</button>

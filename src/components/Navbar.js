@@ -2,26 +2,13 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isScrolled, setIsScrolled] = useState(false);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 10);
-    };
-
-    window.addEventListener('scroll', handleScroll);
-
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-    };
-  }, []);
 
   return (
-        <nav className={`w-full z-50 bg-[#56193F] transition-shadow duration-300 ${isScrolled ? 'shadow-lg' : ''}`}>
+    <nav className="fixed top-0 left-0 right-0 w-full z-50 bg-[#56193F] shadow-lg">
       <div className="container max-w-[1440px] mx-auto px-6">
         <div className="flex justify-between items-center py-4">
           {/* Left side: Hamburger Menu Icon */}
