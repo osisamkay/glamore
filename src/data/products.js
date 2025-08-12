@@ -3,7 +3,7 @@ export const collections = {
     {
       id: 'w-tops',
       name: 'Tops',
-      image: "/Women's GGF Photos/Red Tribal Flow, homepage.jpg",
+      image: "/Women's GGF Photos/Homepage Womens Tops.jpg",
       url: '/category/women/tops'
     },
     {
@@ -15,7 +15,7 @@ export const collections = {
     {
       id: 'w-accessories',
       name: 'Accessories',
-      image: '/placeholder-accessory.jpg', // Placeholder
+      image: '/cap.png', // Placeholder
       url: '/category/women/accessories'
     }
   ],
@@ -23,7 +23,7 @@ export const collections = {
     {
       id: 'm-tops',
       name: 'Tops',
-      image: "/Men's GGF Photos/Trendy Native Shirt.webp",
+      image: "/Men's GGF Photos/Homepage Mens Tops.jpg",
       url: '/category/men/tops'
     },
     {
@@ -35,7 +35,7 @@ export const collections = {
     {
       id: 'm-accessories',
       name: 'Accessories',
-      image: '/placeholder-accessory.jpg', // Placeholder
+      image: '/cap.png', // Placeholder
       url: '/category/men/accessories'
     }
   ],
@@ -43,7 +43,7 @@ export const collections = {
     {
       id: 'k-tops',
       name: 'Tops',
-      image: "/Kids GGF Photos/Eyo Junior Shirt.jpg",
+      image: "/Kids GGF Photos/Homepage Kids Tops.jpg",
       url: '/category/kids/tops'
     },
     {
@@ -55,7 +55,7 @@ export const collections = {
     {
       id: 'k-accessories',
       name: 'Accessories',
-      image: '/placeholder-accessory.jpg', // Placeholder
+      image: '/cap.png', // Placeholder
       url: '/category/kids/accessories'
     }
   ]
@@ -65,52 +65,140 @@ export const featuredProducts = {
   women: [
     {
       id: 1,
-      name: "Ankara Bliss Gown",
-      image: "/Women's GGF Photos/Ankara Bliss Gown, homepage.jpg",
-      price: 393,
+      name: "Ankara Clutch Luxe",
+      image: "/Women's GGF Photos/Ankara Cluch Luxe.png",
+      price: 159,
       category: 'women',
       url: "/product/1"
     },
     {
       id: 2,
-      name: "Victoria Island Blazer",
-      image: "/Women's GGF Photos/Victoria Island Blazer.jpg",
+      name: "Bliss Gown",
+      image: "/Women's GGF Photos/Bliss Gown.jpg",
       price: 393,
       category: 'women',
       url: "/product/2"
     },
     {
+      id: 3,
+      name: "Victoria Island Blazer",
+      image: "/Women's GGF Photos/Victoria Island Blazer.jpg",
+      price: 393,
+      category: 'women',
+      url: "/product/3"
+    },
+    {
+      id: 4,
+      name: "Black Tribal Flow",
+      image: "/Women's GGF Photos/Black Tribal Flow.jpg",
+      price: 393,
+      category: 'women',
+      url: "/product/4"
+    },
+    {
+      id: 5,
+      name: "Lace Fan",
+      image: "/Women's GGF Photos/Lace fan.png",
+      price: 393,
+      category: 'women',
+      url: "/product/5"
+    },
+    {
+      id: 6,
+      name: "Beatae Vitae",
+      image: "/Women's GGF Photos/Beatea.png",
+      price: 393,
+      category: 'women',
+      url: "/product/6"
+    },
+    {
       id: 7,
-      name: "Red Tribal Flow",
-      image: "/Women's GGF Photos/Red Tribal Flow, homepage.jpg",
+      name: "Bucket Hat",
+      image: "/Women's GGF Photos/Bucket Hat.png",
       price: 393,
       category: 'women',
       url: "/product/7"
-    }
+    },
+    {
+      id: 8,
+      name: "Flow Top",
+      image: "/Women's GGF Photos/Flow Top.png",
+      price: 393,
+      category: 'women',
+      url: "/product/8"
+    },
   ],
   men: [
     {
       id: 3,
-      name: "Vibe Agbada",
-      image: "/Men's GGF Photos/Vibe Agbada.jpg",
+      name: "Purple Pants",
+      image: "/Men's GGF Photos/Purple Pants.jpg",
       price: 393,
       category: 'men',
       url: "/product/3"
     },
     {
       id: 4,
-      name: "Trendy Native Shirt",
-      image: "/Men's GGF Photos/Trendy Native Shirt.webp",
+      name: "Red Cap",
+      image: "/Men's GGF Photos/Red Cap.png",
       price: 393,
       category: 'men',
       url: "/product/4"
-    }
+    },
+    {
+      id: 5,
+      name: "Denim Fusion",
+      image: "/Men's GGF Photos/Denim Fusion.png",
+      price: 393,
+      category: 'men',
+      url: "/product/5"
+    },
+    {
+      id: 6,
+      name: "Cowl Dress",
+      image: "/Men's GGF Photos/Cowl Dress.jpg",
+      price: 393,
+      category: 'men',
+      url: "/product/6"
+    },
+    {
+      id: 7,
+      name: "Festac Patch Dress",
+      image: "/Men's GGF Photos/Festac Patch Dress.jpg",
+      price: 393,
+      category: 'men',
+      url: "/product/7"
+    },
+    {
+      id: 8,
+      name: "Brown Necklace",
+      image: "/Men's GGF Photos/Brown Necklace.png",
+      price: 393,
+      category: 'men',
+      url: "/product/8"
+    },
+    {
+      id: 9,
+      name: "Vibe Tee",
+      image: "/Men's GGF Photos/Vibe Tee.jpg",
+      price: 393,
+      category: 'men',
+      url: "/product/9"
+    },
+    {
+      id: 10,
+      name: "Vibe Agbada",
+      image: "/Men's GGF Photos/Vibe Agbada.jpg",
+      price: 393,
+      category: 'men',
+      url: "/product/10"
+    },
   ],
   kids: [
     {
       id: 5,
-      name: "Little Ankara Star",
-      image: "/Kids GGF Photos/Little Ankara Star.jpg",
+      name: "Ties Dashiki",
+      image: "/Kids GGF Photos/Ties Dashiki.jpg",
       price: 393,
       category: 'kids',
       url: "/product/5"
@@ -125,12 +213,73 @@ export const featuredProducts = {
     },
     {
       id: 8,
+      name: "Princess Wrap",
+      image: "/Kids GGF Photos/Princess Wrap.jpg",
+      price: 393,
+      category: 'kids',
+      url: "/product/8"
+    },
+    {
+      id: 9,
+      name: "Homepage Kids Tops",
+      image: "/Kids GGF Photos/Homepage Kids Tops.jpg",
+      price: 393,
+      category: 'kids',
+      url: "/product/9"
+    },
+    {
+      id: 11,
       name: "Eyo Junior Shirt",
       image: "/Kids GGF Photos/Eyo Junior Shirt.jpg",
       price: 393,
       category: 'kids',
-      url: "/product/8"
-    }
+      url: "/product/11"
+    },
+    {
+      id: 12,
+      name: "Little Ankara Star",
+      image: "/Kids GGF Photos/Little Ankara Star.jpg",
+      price: 393,
+      category: 'kids',
+      url: "/product/12"
+    },
+    {
+      id: 13,
+      name: "Bow Ankara Shirt",
+      image: "/Kids GGF Photos/Bow Ankara Shirt.jpg",
+      price: 393,
+      category: 'kids',
+      url: "/product/13"
+    },
+    {
+      id: 14,
+      name: "Roots Bib Tee",
+      image: "/Kids GGF Photos/Roots Bib Tee.jpg",
+      price: 393,
+      category: 'kids',
+      url: "/product/14"
+    },
+  ]
+};
+
+export const perfectFitImages = {
+  women: [
+    "/Women's GGF Photos/Ankara Bliss Gown, homepage.jpg",
+    "/Women's GGF Photos/Homepage Womens 2.jpg",
+    "/Women's GGF Photos/Red Tribal Flow, homepage.jpg",
+    "/Women's GGF Photos/Homepage Womens 1.jpg",
+  ],
+  men: [
+    "/Men's GGF Photos/Homepage Mens 2.jpg",
+    "/Men's GGF Photos/Homepage Mens 3.jpg",
+    "/Men's GGF Photos/Homepage Mens 4.jpg",
+    "/Men's GGF Photos/Homepage Mens 1.jpg",
+  ],
+  kids: [
+    "/Kids GGF Photos/Homepage Kids 1.jpg",
+    "/Kids GGF Photos/Homepage Kids 3.jpg",
+    "/Kids GGF Photos/Homepage Kids 2.jpg",
+    "/Kids GGF Photos/Homepage Kids 4.jpg",
   ]
 };
 
