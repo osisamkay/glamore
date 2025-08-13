@@ -12,7 +12,7 @@ export default function ProductDetailClientPage({ product }) {
 
   return (
     <div>
-      <div className="flex flex-col lg:flex-row gap-12">
+      <div className="flex flex-col mt-43 lg:flex-row gap-12">
         {/* Product Image Gallery */}
         <div className="w-full lg:w-1/2">
           <div className="aspect-w-1 aspect-h-1 w-full overflow-hidden rounded-lg">
