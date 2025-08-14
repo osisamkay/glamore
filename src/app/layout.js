@@ -15,8 +15,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata = {
-  title: "Glamore | African-Inspired Fashion & Accessories",
-  description: "Discover our collection of elegant African-inspired clothing and accessories at Glamore.",
+  title: "GlarmourGlow Fashion | African-Inspired Fashion & Accessories",
+  description: "Discover our collection of elegant African-inspired clothing and accessories at GlarmourGlow Fashion.",
 };
 
 export default function RootLayout({ children }) {

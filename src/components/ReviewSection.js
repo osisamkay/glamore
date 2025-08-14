@@ -1,19 +1,19 @@
-import { StarIcon } from '@heroicons/react/20/solid';
-
 const classNames = (...classes) => classes.filter(Boolean).join(' ');
 
 const ReviewCard = ({ review }) => (
   <div className="border border-gray-200 rounded-xl p-6">
     <div className="flex items-center mb-3">
       {[0, 1, 2, 3, 4].map((rating) => (
-        <StarIcon
+        <span
           key={rating}
           className={classNames(
             (review.rating || 0) > rating ? 'text-yellow-400' : 'text-gray-300',
-            'h-5 w-5 flex-shrink-0'
+            'text-lg'
           )}
           aria-hidden="true"
-        />
+        >
+          ★
+        </span>
       ))}
     </div>
     <h4 className="font-semibold text-md text-gray-800">{review.title}</h4>

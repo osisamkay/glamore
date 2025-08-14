@@ -109,7 +109,7 @@ export default function SignUpPage() {
         <div className="max-w-sm mx-auto w-full">
           {/* Logo */}
           {/* <div className="text-center mb-12">
-            <h1 className="text-3xl font-bold" style={{fontFamily: 'serif', color: '#56193f'}}>GGF</h1>
+            <h1 className="text-3xl font-bold" style={{fontFamily: 'serif', color: '#56193f'}}>GlarmourGlow Fashion</h1>
             <p className="text-xs text-gray-400 mt-1">GLAMORE</p>
           </div> */}
 

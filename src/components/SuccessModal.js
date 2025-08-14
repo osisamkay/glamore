@@ -21,7 +21,7 @@ export default function SuccessModal({ isOpen, onClose, title = "Success!", mess
       <div className="bg-white rounded-lg p-8 max-w-sm w-full mx-4 text-center">
         {/* Logo */}
         <div className="mb-6">
-          <h1 className="text-2xl font-bold text-gray-900">GGF</h1>
+          <h1 className="text-2xl font-bold text-gray-900">GlarmourGlow Fashion</h1>
         </div>
 
         {/* Success Icon */}

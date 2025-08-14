@@ -1,8 +1,59 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# GlarmourGlow Fashion E-Commerce Platform
+
+A modern, elegant e-commerce platform built with Next.js, featuring authentication, cart management, and email notifications.
+
+## Features
+
+- 🛍️ **Product Catalog** - Browse and filter products
+- 🔐 **User Authentication** - Secure signup/login with session management
+- 🛒 **Shopping Cart** - Add, remove, and manage cart items
+- 📧 **Email Notifications** - Welcome emails and notifications
+- 🎨 **Modern UI** - Responsive design with Tailwind CSS
+- 🗄️ **Database** - SQLite with Prisma ORM
 
 ## Getting Started
 
-First, run the development server:
+### 1. Environment Setup
+
+Copy the example environment file and configure your settings:
+
+```bash
+cp env.example .env
+```
+
+Edit `.env` and add your email credentials:
+
+```env
+# Database
+DATABASE_URL="file:./prisma/dev.db"
+
+# Email Configuration (for welcome emails)
+EMAIL_USER=your-email@gmail.com
+EMAIL_PASS=your-app-password
+```
+
+**For Gmail Setup:**
+1. Go to [Google Account Settings](https://myaccount.google.com/)
+2. Navigate to Security > 2-Step Verification
+3. Generate an "App Password" for this application
+4. Use your email and the app password (not your regular password)
+
+### 2. Database Setup
+
+Initialize the database:
+
+```bash
+npx prisma db push
+npx prisma generate
+```
+
+### 3. Install Dependencies
+
+```bash
+npm install
+```
+
+### 4. Run Development Server
 
 ```bash
 npm run dev

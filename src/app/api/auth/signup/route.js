@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/db';
 import bcrypt from 'bcryptjs';
+import { sendWelcomeEmail } from '@/lib/email';
 
 export async function POST(request) {
   try {
@@ -38,6 +39,14 @@ export async function POST(request) {
         lastName
       }
     });
+
+    // Send welcome email (don't block signup if email fails)
+    try {
+      await sendWelcomeEmail(user.email, user.firstName, user.lastName);
+    } catch (emailError) {
+      console.error('Failed to send welcome email:', emailError);
+      // Continue with successful signup even if email fails
+    }
 
     // Return user without password
     const { password: _, ...userWithoutPassword } = user;
