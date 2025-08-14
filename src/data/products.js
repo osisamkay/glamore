@@ -110,7 +110,7 @@ export const featuredProducts = {
     {
       id: 5,
       name: "Lace Fan",
-      image: "/Women's GGF Photos/Lace fan.png",
+      image: "/Women's GGF Photos/lace fan.png",
       price: 80,
       category: 'women',
       url: "/product/5",
@@ -143,7 +143,7 @@ export const featuredProducts = {
     {
       id: 8,
       name: "Flow Top",
-      image: "/Women's GGF Photos/Flow Top.png",
+      image: "https://images.unsplash.com/photo-1434389677669-e08b4cac3105?w=500&h=500&fit=crop&crop=center",
       price: 180,
       category: 'women',
       url: "/product/8",
@@ -154,7 +154,7 @@ export const featuredProducts = {
     {
       id: 25,
       name: "Ankara Maxi Dress",
-      image: "/Women's GGF Photos/Ankara Maxi Dress.jpg",
+      image: "https://images.unsplash.com/photo-1496747611176-843222e1e57c?w=500&h=500&fit=crop&crop=center",
       price: 295,
       category: 'women',
       url: "/product/25",
@@ -165,7 +165,7 @@ export const featuredProducts = {
     {
       id: 26,
       name: "Kente Wrap Skirt",
-      image: "/Women's GGF Photos/Kente Wrap Skirt.jpg",
+      image: "https://images.unsplash.com/photo-1583496661160-fb5886a13d44?w=500&h=500&fit=crop&crop=center",
       price: 165,
       category: 'women',
       url: "/product/26",
@@ -176,7 +176,7 @@ export const featuredProducts = {
     {
       id: 27,
       name: "Dashiki Tunic",
-      image: "/Women's GGF Photos/Dashiki Tunic.jpg",
+      image: "https://images.unsplash.com/photo-1445205170230-053b83016050?w=500&h=500&fit=crop&crop=center",
       price: 145,
       category: 'women',
       url: "/product/27",
@@ -187,7 +187,7 @@ export const featuredProducts = {
     {
       id: 28,
       name: "African Print Jumpsuit",
-      image: "/Women's GGF Photos/African Print Jumpsuit.jpg",
+      image: "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=500&h=500&fit=crop&crop=center",
       price: 320,
       category: 'women',
       url: "/product/28",
@@ -198,7 +198,7 @@ export const featuredProducts = {
     {
       id: 29,
       name: "Beaded Statement Necklace",
-      image: "/Women's GGF Photos/Beaded Necklace.jpg",
+      image: "https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=500&h=500&fit=crop&crop=center",
       price: 85,
       category: 'women',
       url: "/product/29",
@@ -209,7 +209,7 @@ export const featuredProducts = {
     {
       id: 30,
       name: "Wax Print Palazzo Pants",
-      image: "/Women's GGF Photos/Palazzo Pants.jpg",
+      image: "https://images.unsplash.com/photo-1594633312681-425c7b97ccd1?w=500&h=500&fit=crop&crop=center",
       price: 185,
       category: 'women',
       url: "/product/30",
@@ -220,7 +220,7 @@ export const featuredProducts = {
     {
       id: 31,
       name: "Embroidered Kaftan",
-      image: "/Women's GGF Photos/Embroidered Kaftan.jpg",
+      image: "https://images.unsplash.com/photo-1509631179647-0177331693ae?w=500&h=500&fit=crop&crop=center",
       price: 275,
       category: 'women',
       url: "/product/31",
@@ -231,7 +231,7 @@ export const featuredProducts = {
     {
       id: 32,
       name: "African Headwrap Set",
-      image: "/Women's GGF Photos/Headwrap Set.jpg",
+      image: "https://images.unsplash.com/photo-1580618672591-eb180b1a973f?w=500&h=500&fit=crop&crop=center",
       price: 55,
       category: 'women',
       url: "/product/32",
@@ -332,7 +332,7 @@ export const featuredProducts = {
     {
       id: 33,
       name: "Kente Bow Tie",
-      image: "/Men's GGF Photos/Kente Bow Tie.jpg",
+      image: "/Men's GGF Photos/Brown Necklace.png",
       price: 45,
       category: 'men',
       url: "/product/33",
@@ -343,7 +343,7 @@ export const featuredProducts = {
     {
       id: 34,
       name: "African Print Blazer",
-      image: "/Men's GGF Photos/African Print Blazer.jpg",
+      image: "/Men's GGF Photos/Classic Shirt.jpg",
       price: 285,
       category: 'men',
       url: "/product/34",
@@ -354,7 +354,7 @@ export const featuredProducts = {
     {
       id: 35,
       name: "Dashiki Shirt",
-      image: "/Men's GGF Photos/Dashiki Shirt.jpg",
+      image: "/Men's GGF Photos/Trendy Native Shirt.webp",
       price: 125,
       category: 'men',
       url: "/product/35",
@@ -365,7 +365,7 @@ export const featuredProducts = {
     {
       id: 36,
       name: "Ankara Shorts",
-      image: "/Men's GGF Photos/Ankara Shorts.jpg",
+      image: "/Men's GGF Photos/Patch Dress.jpg",
       price: 95,
       category: 'men',
       url: "/product/36",
@@ -376,7 +376,7 @@ export const featuredProducts = {
     {
       id: 37,
       name: "Traditional Kufi Hat",
-      image: "/Men's GGF Photos/Kufi Hat.jpg",
+      image: "/Men's GGF Photos/Red Cap.png",
       price: 35,
       category: 'men',
       url: "/product/37",
@@ -387,7 +387,7 @@ export const featuredProducts = {
     {
       id: 38,
       name: "Wax Print Polo",
-      image: "/Men's GGF Photos/Wax Print Polo.jpg",
+      image: "/Men's GGF Photos/Lagbaja.jpg",
       price: 155,
       category: 'men',
       url: "/product/38",
@@ -398,7 +398,7 @@ export const featuredProducts = {
     {
       id: 39,
       name: "Grand Boubou",
-      image: "/Men's GGF Photos/Grand Boubou.jpg",
+      image: "/Men's GGF Photos/Shift Dress.jpg",
       price: 395,
       category: 'men',
       url: "/product/39",
@@ -409,7 +409,7 @@ export const featuredProducts = {
     {
       id: 40,
       name: "African Leather Sandals",
-      image: "/Men's GGF Photos/Leather Sandals.jpg",
+      image: "/Men's GGF Photos/Sade Cutout.jpg",
       price: 125,
       category: 'men',
       url: "/product/40",
@@ -510,7 +510,7 @@ export const featuredProducts = {
     {
       id: 41,
       name: "Mini Ankara Dress",
-      image: "/Kids GGF Photos/Mini Ankara Dress.jpg",
+      image: "/Kids GGF Photos/Homepage Kids 1.jpg",
       price: 75,
       category: 'kids',
       url: "/product/41",
@@ -521,7 +521,7 @@ export const featuredProducts = {
     {
       id: 42,
       name: "Little Dashiki Set",
-      image: "/Kids GGF Photos/Little Dashiki Set.jpg",
+      image: "/Kids GGF Photos/Homepage Kids 2.jpg",
       price: 85,
       category: 'kids',
       url: "/product/42",
@@ -532,7 +532,7 @@ export const featuredProducts = {
     {
       id: 43,
       name: "African Print Romper",
-      image: "/Kids GGF Photos/African Print Romper.jpg",
+      image: "/Kids GGF Photos/Homepage Kids 3.jpg",
       price: 65,
       category: 'kids',
       url: "/product/43",
@@ -543,7 +543,7 @@ export const featuredProducts = {
     {
       id: 44,
       name: "Kente Suspender Shorts",
-      image: "/Kids GGF Photos/Kente Suspender Shorts.jpg",
+      image: "/Kids GGF Photos/Homepage Kids 4.jpg",
       price: 70,
       category: 'kids',
       url: "/product/44",
@@ -554,7 +554,7 @@ export const featuredProducts = {
     {
       id: 45,
       name: "Baby Headband Set",
-      image: "/Kids GGF Photos/Baby Headband Set.jpg",
+      image: "/Kids GGF Photos/Homepage Kids 5.webp",
       price: 25,
       category: 'kids',
       url: "/product/45",
@@ -565,7 +565,7 @@ export const featuredProducts = {
     {
       id: 46,
       name: "Traditional Tunic",
-      image: "/Kids GGF Photos/Traditional Tunic.jpg",
+      image: "/Kids GGF Photos/Homepage Kids 6, bottoms.jpg",
       price: 80,
       category: 'kids',
       url: "/product/46",
@@ -576,7 +576,7 @@ export const featuredProducts = {
     {
       id: 47,
       name: "Ankara Skirt Set",
-      image: "/Kids GGF Photos/Ankara Skirt Set.jpg",
+      image: "/Kids GGF Photos/Homepage Kids 1.jpg",
       price: 90,
       category: 'kids',
       url: "/product/47",
@@ -587,7 +587,7 @@ export const featuredProducts = {
     {
       id: 48,
       name: "Little Chief Hat",
-      image: "/Kids GGF Photos/Little Chief Hat.jpg",
+      image: "/Kids GGF Photos/Homepage Kids 2.jpg",
       price: 30,
       category: 'kids',
       url: "/product/48",

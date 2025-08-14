@@ -1,16 +1,18 @@
 import { NextResponse } from 'next/server';
-import { prisma } from '@/lib/db';
+import { PrismaClient } from '@/generated/prisma';
 import bcrypt from 'bcryptjs';
 import { sendWelcomeEmail } from '@/lib/email';
 
+const prisma = new PrismaClient();
+
 export async function POST(request) {
   try {
-    const { email, password, firstName, lastName } = await request.json();
+    const { email, password, firstName, lastName, name } = await request.json();
 
-    // Validate required fields
-    if (!email || !password || !firstName || !lastName) {
+    // Validate required fields (support both name and firstName/lastName)
+    if (!email || !password || (!name && (!firstName || !lastName))) {
       return NextResponse.json(
-        { error: 'All fields are required' },
+        { error: 'Email, password, and name are required' },
         { status: 400 }
       );
     }
@@ -30,13 +32,13 @@ export async function POST(request) {
     // Hash password
     const hashedPassword = await bcrypt.hash(password, 12);
 
-    // Create user
+    // Create user (handle both name formats)
     const user = await prisma.user.create({
       data: {
         email,
         password: hashedPassword,
-        firstName,
-        lastName
+        firstName: firstName || name || 'User',
+        lastName: lastName || ''
       }
     });
 

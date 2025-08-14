@@ -1,7 +1,10 @@
 import { NextResponse } from 'next/server';
-import { prisma } from '@/lib/db';
+import { PrismaClient } from '@/generated/prisma';
 import bcrypt from 'bcryptjs';
 import { cookies } from 'next/headers';
+import jwt from 'jsonwebtoken';
+
+const prisma = new PrismaClient();
 
 export async function POST(request) {
   try {
@@ -37,8 +40,12 @@ export async function POST(request) {
       );
     }
 
-    // Create session (simple approach using cookies)
-    const sessionToken = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+    // Create JWT token
+    const token = jwt.sign(
+      { userId: user.id, email: user.email },
+      process.env.JWT_SECRET || 'your-secret-key',
+      { expiresIn: '7d' }
+    );
 
     // Return user without password
     const { password: _, ...userWithoutPassword } = user;
@@ -48,16 +55,8 @@ export async function POST(request) {
       user: userWithoutPassword
     });
 
-    // Set session cookie
-    response.cookies.set('sessionToken', sessionToken, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
-      maxAge: 60 * 60 * 24 * 7 // 7 days
-    });
-
-    // Set user ID cookie for easy access
-    response.cookies.set('userId', user.id, {
+    // Set JWT token cookie
+    response.cookies.set('token', token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'lax',

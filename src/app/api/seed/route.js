@@ -46,8 +46,9 @@ export async function POST() {
             image: product.image,
             price: product.price,
             category: product.category,
-            color: product.color,
-            sizes: product.size.join(','), // Convert array to comma-separated string
+            colors: generateColors(product).join(','), // Multiple colors
+            sizes: generateSizes(product.category).join(','), // At least 5 sizes
+            quantity: Math.floor(Math.random() * 50) + 20, // Random quantity 20-70
             description: generateDescription(product)
           }
         });
@@ -76,6 +77,37 @@ export async function POST() {
       { status: 500 }
     );
   }
+}
+
+// Generate multiple colors for each product
+function generateColors(product) {
+  const baseColor = product.color;
+  const colorVariations = {
+    'Orange': ['Orange', 'Coral', 'Peach', 'Burnt Orange'],
+    'Pink': ['Pink', 'Rose', 'Blush', 'Magenta'],
+    'Blue': ['Blue', 'Navy', 'Royal Blue', 'Sky Blue'],
+    'Black': ['Black', 'Charcoal', 'Midnight', 'Ebony'],
+    'White': ['White', 'Ivory', 'Cream', 'Pearl'],
+    'Green': ['Green', 'Forest', 'Emerald', 'Sage'],
+    'Purple': ['Purple', 'Plum', 'Lavender', 'Violet'],
+    'Brown': ['Brown', 'Tan', 'Chocolate', 'Camel'],
+    'Red': ['Red', 'Crimson', 'Burgundy', 'Cherry'],
+    'Yellow': ['Yellow', 'Gold', 'Amber', 'Mustard'],
+    'Multi-color': ['Multi-color', 'Rainbow', 'Patterned', 'Mixed']
+  };
+  
+  return colorVariations[baseColor] || [baseColor, 'Black', 'White', 'Navy'];
+}
+
+// Generate at least 5 sizes based on category
+function generateSizes(category) {
+  const sizeOptions = {
+    'women': ['XS', 'S', 'M', 'L', 'XL', 'XXL'],
+    'men': ['S', 'M', 'L', 'XL', 'XXL', 'XXXL'],
+    'kids': ['XS', 'S', 'M', 'L', 'XL', '2T', '3T', '4T']
+  };
+  
+  return sizeOptions[category] || ['XS', 'S', 'M', 'L', 'XL', 'XXL'];
 }
 
 // Generate product descriptions based on name and tags

@@ -1,19 +1,25 @@
 import { NextResponse } from 'next/server';
-import { prisma } from '@/lib/db';
+import { PrismaClient } from '@/generated/prisma';
 import { cookies } from 'next/headers';
+import jwt from 'jsonwebtoken';
+
+const prisma = new PrismaClient();
 
 export async function GET() {
   try {
     const cookieStore = cookies();
-    const userId = cookieStore.get('userId')?.value;
-    const sessionToken = cookieStore.get('sessionToken')?.value;
+    const token = cookieStore.get('token')?.value;
 
-    if (!userId || !sessionToken) {
+    if (!token) {
       return NextResponse.json(
         { error: 'Not authenticated' },
         { status: 401 }
       );
     }
+
+    // Verify JWT token
+    const decoded = jwt.verify(token, process.env.JWT_SECRET || 'your-secret-key');
+    const userId = decoded.userId;
 
     // Find user by ID
     const user = await prisma.user.findUnique({

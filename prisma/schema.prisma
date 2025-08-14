@@ -17,8 +17,9 @@ model Product {
   price       Float
   image       String
   category    String
-  color       String
-  sizes       String   // Comma-separated sizes like "S,M,L,XL"
+  colors      String   // Comma-separated colors like "Red,Blue,Green"
+  sizes       String   // Comma-separated sizes like "XS,S,M,L,XL,XXL"
+  quantity    Int      @default(50) // Total inventory quantity
   rating      Float?   @default(4.0)
   reviewCount Int?     @default(0)
   description String?

@@ -6,19 +6,18 @@ import { useCart } from '@/context/CartContext';
 import { useAuth } from '@/context/AuthContext';
 
 export default function ProductInfo({ product }) {
-  const [selectedColor, setSelectedColor] = useState(product.color);
-  const [selectedSize, setSelectedSize] = useState(product.size?.[0] || '');
+  // Parse colors and sizes from comma-separated strings
+  const availableColors = product.colors ? product.colors.split(',') : [product.color || 'Black'];
+  const availableSizes = product.sizes ? product.sizes.split(',') : (Array.isArray(product.size) ? product.size : []);
+  
+  const [selectedColor, setSelectedColor] = useState(availableColors[0]);
+  const [selectedSize, setSelectedSize] = useState(availableSizes[0] || '');
   const [quantity, setQuantity] = useState(1);
   const [isAddingToCart, setIsAddingToCart] = useState(false);
   
   const { addToCart } = useCart();
   const { isAuthenticated } = useAuth();
   const router = useRouter();
-
-  // Parse sizes from comma-separated string if needed
-  const availableSizes = Array.isArray(product.size) 
-    ? product.size 
-    : (product.sizes ? product.sizes.split(',') : []);
 
   const handleAddToCart = async () => {
     // Check if user is authenticated
@@ -50,7 +49,18 @@ export default function ProductInfo({ product }) {
       {/* Product Title and Price */}
       <div>
         <h1 className="text-3xl font-light text-gray-900">{product.name}</h1>
-        <p className="text-2xl font-medium text-gray-900 mt-2">${product.price}</p>
+        <div className="flex items-center justify-between mt-2">
+          <p className="text-2xl font-medium text-gray-900">${product.price}</p>
+          <p className="text-sm text-gray-600">
+            {product.quantity > 10 ? (
+              <span className="text-green-600">✓ In Stock ({product.quantity} left)</span>
+            ) : product.quantity > 0 ? (
+              <span className="text-orange-600">⚠ Low Stock ({product.quantity} left)</span>
+            ) : (
+              <span className="text-red-600">✗ Out of Stock</span>
+            )}
+          </p>
+        </div>
       </div>
 
       {/* Product Description */}
@@ -64,11 +74,20 @@ export default function ProductInfo({ product }) {
       {/* Color Selection */}
       <div>
         <h3 className="text-lg font-medium text-gray-900 mb-3">Color</h3>
-        <div className="flex items-center space-x-3">
-          <div className="w-8 h-8 rounded-full border-2 border-gray-300 bg-gray-100 flex items-center justify-center">
-            <span className="text-xs font-medium text-gray-700">{selectedColor}</span>
-          </div>
-          <span className="text-gray-700">{selectedColor}</span>
+        <div className="flex flex-wrap gap-3">
+          {availableColors.map((color) => (
+            <button
+              key={color}
+              onClick={() => setSelectedColor(color)}
+              className={`px-4 py-2 text-sm font-medium border rounded-md ${
+                selectedColor === color
+                  ? 'border-[#56193f] bg-[#56193f] text-white'
+                  : 'border-gray-300 text-gray-700 hover:border-gray-400'
+              }`}
+            >
+              {color}
+            </button>
+          ))}
         </div>
       </div>
 
@@ -76,7 +95,7 @@ export default function ProductInfo({ product }) {
       {availableSizes.length > 0 && (
         <div>
           <h3 className="text-lg font-medium text-gray-900 mb-3">Size</h3>
-          <div className="grid grid-cols-4 gap-2">
+          <div className="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-6 gap-2">
             {availableSizes.map((size) => (
               <button
                 key={size}
@@ -117,19 +136,22 @@ export default function ProductInfo({ product }) {
       {/* Add to Cart Button */}
       <button
         onClick={handleAddToCart}
-        disabled={isAddingToCart || !selectedSize}
+        disabled={isAddingToCart || !selectedSize || product.quantity === 0}
         className="w-full bg-[#56193f] text-white py-3 px-6 rounded-md font-medium hover:bg-[#56193f]/90 focus:outline-none focus:ring-2 focus:ring-[#56193f] focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
       >
-        {isAddingToCart ? 'Adding to Cart...' : 'Add to Cart'}
+        {product.quantity === 0 ? 'Out of Stock' : 
+         isAddingToCart ? 'Adding to Cart...' : 'Add to Cart'}
       </button>
 
       {/* Product Details */}
       <div className="border-t pt-6">
         <h3 className="text-lg font-medium text-gray-900 mb-3">Product Details</h3>
         <ul className="text-gray-600 space-y-1">
-          <li>Category: {product.category}</li>
-          <li>Available Sizes: {availableSizes.join(', ')}</li>
-          <li>Color: {selectedColor}</li>
+          <li><strong>Category:</strong> {product.category}</li>
+          <li><strong>Available Colors:</strong> {availableColors.join(', ')}</li>
+          <li><strong>Available Sizes:</strong> {availableSizes.join(', ')}</li>
+          <li><strong>Selected:</strong> {selectedColor} • {selectedSize}</li>
+          <li><strong>Stock Status:</strong> {product.quantity} items remaining</li>
         </ul>
       </div>
     </div>
