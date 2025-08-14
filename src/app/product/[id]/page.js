@@ -1,22 +1,28 @@
 import Layout from '../../../components/Layout';
-import { featuredProducts } from '../../../data/products';
 import ProductDetailClientPage from '../../../components/ProductDetailClientPage';
 
-// Helper function to find a product by its ID across all categories
-const findProductById = (id) => {
-  const productId = parseInt(id, 10);
-  for (const category in featuredProducts) {
-    const product = featuredProducts[category].find(p => p.id === productId);
-    if (product) {
-      return product;
+// Fetch product data from API
+async function getProduct(id) {
+  try {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/api/products/${id}`, {
+      cache: 'no-store' // Ensure fresh data
+    });
+    
+    if (!res.ok) {
+      return null;
     }
+    
+    const product = await res.json();
+    return product;
+  } catch (error) {
+    console.error('Error fetching product:', error);
+    return null;
   }
-  return null;
-};
+}
 
-export default function ProductPage({ params }) {
+export default async function ProductPage({ params }) {
   const { id } = params;
-  const product = findProductById(id);
+  const product = await getProduct(id);
 
   if (!product) {
     return (

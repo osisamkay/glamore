@@ -20,14 +20,14 @@ export const sendWelcomeEmail = async (userEmail, firstName, lastName) => {
     const mailOptions = {
       from: process.env.EMAIL_USER || 'noreply@glamore.com',
       to: userEmail,
-      subject: '🌟 Welcome to GlarmourGlow Fashion - Your Fashion Journey Begins!',
+      subject: '🌟 Welcome to GlamourGlow Fashion - Your Fashion Journey Begins!',
       html: `
         <!DOCTYPE html>
         <html>
         <head>
           <meta charset="utf-8">
           <meta name="viewport" content="width=device-width, initial-scale=1.0">
-          <title>Welcome to GlarmourGlow Fashion</title>
+          <title>Welcome to GlamourGlow Fashion</title>
           <style>
             body { 
               font-family: 'Georgia', serif; 
@@ -77,14 +77,14 @@ export const sendWelcomeEmail = async (userEmail, firstName, lastName) => {
         </head>
         <body>
           <div class="header">
-            <h1>✨ Welcome to GlarmourGlow Fashion! ✨</h1>
+            <h1>✨ Welcome to GlamourGlow Fashion! ✨</h1>
             <p>Where Fashion Meets Elegance</p>
           </div>
           
           <div class="content">
             <h2>Hello ${firstName} ${lastName}! 👋</h2>
             
-            <p>We're absolutely <span class="highlight">thrilled</span> to have you join the GlarmourGlow Fashion family! Your fashion journey starts now, and we couldn't be more excited to be part of it.</p>
+            <p>We're absolutely <span class="highlight">thrilled</span> to have you join the GlamourGlow Fashion family! Your fashion journey starts now, and we couldn't be more excited to be part of it.</p>
             
             <h3>🎉 What's Next?</h3>
             <ul>
@@ -98,8 +98,8 @@ export const sendWelcomeEmail = async (userEmail, firstName, lastName) => {
               <a href="http://localhost:3000" class="btn">Start Shopping Now</a>
             </div>
             
-            <h3>💎 Why GlarmourGlow Fashion?</h3>
-            <p>At GlarmourGlow Fashion, we believe that fashion is more than just clothing—it's a form of self-expression, confidence, and art. Every piece in our collection is carefully selected to help you tell your unique story.</p>
+            <h3>💎 Why GlamourGlow Fashion?</h3>
+            <p>At GlamourGlow Fashion, we believe that fashion is more than just clothing—it's a form of self-expression, confidence, and art. Every piece in our collection is carefully selected to help you tell your unique story.</p>
             
             <div style="background: #f8f9fa; padding: 20px; border-radius: 5px; margin: 20px 0;">
               <p><strong>🎁 Special Welcome Offer:</strong> Use code <span class="highlight">WELCOME10</span> for 10% off your first order!</p>
@@ -110,20 +110,20 @@ export const sendWelcomeEmail = async (userEmail, firstName, lastName) => {
             <p>Welcome aboard, and happy shopping!</p>
             
             <p>With love and style,<br>
-            <strong>The GlarmourGlow Fashion Team</strong> 💕</p>
+            <strong>The GlamourGlow Fashion Team</strong> 💕</p>
           </div>
           
           <div class="footer">
-            <p><small>This is a demo email from GlarmourGlow Fashion E-Commerce Platform</small></p>
-            <p><small>© 2024 GlarmourGlow Fashion. All rights reserved.</small></p>
+            <p><small>This is a demo email from GlamourGlow Fashion E-Commerce Platform</small></p>
+            <p><small>© 2024 GlamourGlow Fashion. All rights reserved.</small></p>
           </div>
         </body>
         </html>
       `,
       text: `
-        Welcome to GlarmourGlow Fashion, ${firstName} ${lastName}!
+        Welcome to GlamourGlow Fashion, ${firstName} ${lastName}!
         
-        We're thrilled to have you join the GlarmourGlow Fashion family! Your fashion journey starts now.
+        We're thrilled to have you join the GlamourGlow Fashion family! Your fashion journey starts now.
         
         What's Next?
         - Explore our curated collection
@@ -137,7 +137,7 @@ export const sendWelcomeEmail = async (userEmail, firstName, lastName) => {
         
         Welcome aboard, and happy shopping!
         
-        The GlarmourGlow Fashion Team
+        The GlamourGlow Fashion Team
       `,
     };
 
@@ -159,14 +159,14 @@ export const sendPasswordResetEmail = async (userEmail, resetToken) => {
     const mailOptions = {
       from: process.env.EMAIL_USER || 'noreply@glamore.com',
       to: userEmail,
-      subject: '🔐 Reset Your GlarmourGlow Fashion Password',
+      subject: '🔐 Reset Your GlamourGlow Fashion Password',
       html: `
         <div style="font-family: Georgia, serif; max-width: 600px; margin: 0 auto; padding: 20px;">
           <div style="background: #56193f; color: white; padding: 20px; text-align: center; border-radius: 10px 10px 0 0;">
             <h1>Password Reset Request</h1>
           </div>
           <div style="background: white; padding: 30px; border: 1px solid #e5e5e5;">
-            <p>You requested a password reset for your GlarmourGlow Fashion account.</p>
+            <p>You requested a password reset for your GlamourGlow Fashion account.</p>
             <p>Click the button below to reset your password:</p>
             <div style="text-align: center; margin: 30px 0;">
               <a href="http://localhost:3000/reset-password?token=${resetToken}" 

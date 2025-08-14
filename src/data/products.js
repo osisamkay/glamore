@@ -143,7 +143,7 @@ export const featuredProducts = {
     {
       id: 8,
       name: "Flow Top",
-      image: "https://images.unsplash.com/photo-1434389677669-e08b4cac3105?w=500&h=500&fit=crop&crop=center",
+      image: "/Women's GGF Photos/Flow Top.png",
       price: 180,
       category: 'women',
       url: "/product/8",
@@ -154,7 +154,7 @@ export const featuredProducts = {
     {
       id: 25,
       name: "Ankara Maxi Dress",
-      image: "https://images.unsplash.com/photo-1496747611176-843222e1e57c?w=500&h=500&fit=crop&crop=center",
+      image: "/Women's GGF Photos/Blue Tribal Flow.jpg",
       price: 295,
       category: 'women',
       url: "/product/25",
@@ -165,7 +165,7 @@ export const featuredProducts = {
     {
       id: 26,
       name: "Kente Wrap Skirt",
-      image: "https://images.unsplash.com/photo-1583496661160-fb5886a13d44?w=500&h=500&fit=crop&crop=center",
+      image: "/Women's GGF Photos/Green Tribal Flow.jpg",
       price: 165,
       category: 'women',
       url: "/product/26",
@@ -176,7 +176,7 @@ export const featuredProducts = {
     {
       id: 27,
       name: "Dashiki Tunic",
-      image: "https://images.unsplash.com/photo-1445205170230-053b83016050?w=500&h=500&fit=crop&crop=center",
+      image: "/Women's GGF Photos/Dashiki Tunic.jpg",
       price: 145,
       category: 'women',
       url: "/product/27",
@@ -187,7 +187,7 @@ export const featuredProducts = {
     {
       id: 28,
       name: "African Print Jumpsuit",
-      image: "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=500&h=500&fit=crop&crop=center",
+      image: "/Women's GGF Photos/African Print Jumpsuit.jpg",
       price: 320,
       category: 'women',
       url: "/product/28",
@@ -198,7 +198,7 @@ export const featuredProducts = {
     {
       id: 29,
       name: "Beaded Statement Necklace",
-      image: "https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=500&h=500&fit=crop&crop=center",
+      image: "/Women's GGF Photos/Beaded Statement Necklace.jpg",
       price: 85,
       category: 'women',
       url: "/product/29",
@@ -209,7 +209,7 @@ export const featuredProducts = {
     {
       id: 30,
       name: "Wax Print Palazzo Pants",
-      image: "https://images.unsplash.com/photo-1594633312681-425c7b97ccd1?w=500&h=500&fit=crop&crop=center",
+      image: "/Women's GGF Photos/Wax Print Palazzo Pants.jpg",
       price: 185,
       category: 'women',
       url: "/product/30",
@@ -220,7 +220,7 @@ export const featuredProducts = {
     {
       id: 31,
       name: "Embroidered Kaftan",
-      image: "https://images.unsplash.com/photo-1509631179647-0177331693ae?w=500&h=500&fit=crop&crop=center",
+      image: "/Women's GGF Photos/Embroidered Kaftan.jpg",
       price: 275,
       category: 'women',
       url: "/product/31",
@@ -231,7 +231,7 @@ export const featuredProducts = {
     {
       id: 32,
       name: "African Headwrap Set",
-      image: "https://images.unsplash.com/photo-1580618672591-eb180b1a973f?w=500&h=500&fit=crop&crop=center",
+      image: "/Women's GGF Photos/African Headwrap Set.jpg",
       price: 55,
       category: 'women',
       url: "/product/32",

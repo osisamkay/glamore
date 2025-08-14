@@ -1,6 +1,6 @@
 # Project Planning
 
-This document outlines the architecture, goals, and conventions for the GlarmourGlow Fashion project.
+This document outlines the architecture, goals, and conventions for the GlamourGlow Fashion project.
 
 ## 1. Project Goals
 

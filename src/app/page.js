@@ -7,11 +7,57 @@ import SectionTitle from "../components/SectionTitle";
 import CategoryCard from "../components/CategoryCard";
 import ProductCard from "../components/ProductCard";
 import PerfectFitSection from '../components/PerfectFitSection';
-import { collections, featuredProducts, perfectFitImages, shopByCategories } from "../data/products";
-import { useState } from 'react';
+import { collections, perfectFitImages, shopByCategories } from "../data/products";
+import { useState, useEffect } from 'react';
 
 export default function Home() {
   const [activeCollection, setActiveCollection] = useState('women');
+  const [latestProducts, setLatestProducts] = useState({
+    women: [],
+    men: [],
+    kids: []
+  });
+  const [loading, setLoading] = useState(true);
+
+  // Fetch latest arrivals from API
+  useEffect(() => {
+    const fetchLatestProducts = async () => {
+      try {
+        setLoading(true);
+        
+        // Fetch products for each category (8 products each)
+        const [womenRes, menRes, kidsRes] = await Promise.all([
+          fetch('/api/products?category=women&limit=8'),
+          fetch('/api/products?category=men&limit=8'),
+          fetch('/api/products?category=kids&limit=8')
+        ]);
+
+        const [womenData, menData, kidsData] = await Promise.all([
+          womenRes.json(),
+          menRes.json(),
+          kidsRes.json()
+        ]);
+
+        setLatestProducts({
+          women: womenData.products.reverse() || [],
+          men: menData.products || [],
+          kids: kidsData.products || []
+        });
+      } catch (error) {
+        console.error('Error fetching latest products:', error);
+        // Set empty arrays as fallback
+        setLatestProducts({
+          women: [],
+          men: [],
+          kids: []
+        });
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchLatestProducts();
+  }, []);
 
   return (
     <Layout>
@@ -53,11 +99,23 @@ export default function Home() {
           {/* Latest Arrivals */}
           <div className="mt-16">
             <h2 className="text-2xl font-light mb-8 text-center">Latest Arrivals</h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
-              {featuredProducts[activeCollection].map((product) => (
-                <ProductCard key={product.id} product={product} />
-              ))}
-            </div>
+            {loading ? (
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
+                {[...Array(8)].map((_, index) => (
+                  <div key={index} className="animate-pulse">
+                    <div className="bg-gray-200 aspect-square rounded-lg mb-4"></div>
+                    <div className="h-4 bg-gray-200 rounded mb-2"></div>
+                    <div className="h-4 bg-gray-200 rounded w-2/3"></div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
+                {latestProducts[activeCollection].map((product) => (
+                  <ProductCard key={product.id} product={product} />
+                ))}
+              </div>
+            )}
           </div>
         </div>
       </section>

@@ -1,4 +1,4 @@
-# GlarmourGlow Fashion E-Commerce Platform
+# GlamourGlow Fashion E-Commerce Platform
 
 A modern, elegant e-commerce platform built with Next.js, featuring authentication, cart management, and email notifications.
 

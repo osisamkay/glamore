@@ -5,10 +5,14 @@ import { useRouter } from 'next/navigation';
 import { useCart } from '@/context/CartContext';
 import { useAuth } from '@/context/AuthContext';
 
-export default function ProductInfo({ product }) {
-  // Parse colors and sizes from comma-separated strings
-  const availableColors = product.colors ? product.colors.split(',') : [product.color || 'Black'];
-  const availableSizes = product.sizes ? product.sizes.split(',') : (Array.isArray(product.size) ? product.size : []);
+export default function ProductInfo({ product, onShowSizeGuide }) {
+  // Handle colors and sizes that may be arrays or comma-separated strings
+  const availableColors = Array.isArray(product.colors) 
+    ? product.colors 
+    : (product.colors ? product.colors.split(',') : [product.color || 'Black']);
+  const availableSizes = Array.isArray(product.sizes)
+    ? product.sizes
+    : (product.sizes ? product.sizes.split(',') : (Array.isArray(product.size) ? product.size : []));
   
   const [selectedColor, setSelectedColor] = useState(availableColors[0]);
   const [selectedSize, setSelectedSize] = useState(availableSizes[0] || '');
@@ -94,7 +98,17 @@ export default function ProductInfo({ product }) {
       {/* Size Selection */}
       {availableSizes.length > 0 && (
         <div>
-          <h3 className="text-lg font-medium text-gray-900 mb-3">Size</h3>
+          <div className="flex items-center justify-between mb-3">
+            <h3 className="text-lg font-medium text-gray-900">Size</h3>
+            {onShowSizeGuide && (
+              <button
+                onClick={onShowSizeGuide}
+                className="text-sm text-[#56193f] hover:text-[#56193f]/80 underline"
+              >
+                View Size Chart
+              </button>
+            )}
+          </div>
           <div className="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-6 gap-2">
             {availableSizes.map((size) => (
               <button

@@ -15,8 +15,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata = {
-  title: "GlarmourGlow Fashion | African-Inspired Fashion & Accessories",
-  description: "Discover our collection of elegant African-inspired clothing and accessories at GlarmourGlow Fashion.",
+  title: "GlamourGlow Fashion | African-Inspired Fashion & Accessories",
+  description: "Discover our collection of elegant African-inspired clothing and accessories at GlamourGlow Fashion.",
 };
 
 export default function RootLayout({ children }) {
@@ -30,7 +30,7 @@ export default function RootLayout({ children }) {
       >
         <AuthProvider>
           <CartProvider>
-            <Layout>{children}</Layout>
+            {children}
           </CartProvider>
         </AuthProvider>
       </body>
