@@ -6,7 +6,7 @@ import Image from 'next/image';
 
 // Order Summary Component
 const OrderSummary = ({ items }) => {
-  const subtotal = items.reduce((acc, item) => acc + item.price * item.quantity, 0);
+  const subtotal = items.reduce((acc, item) => acc + (item.price || 0) * (item.quantity || 1), 0);
   const salesTax = subtotal * 0.13;
   const shipping = 5.99;
   const total = subtotal + salesTax + shipping;
@@ -49,76 +49,111 @@ const OrderSummary = ({ items }) => {
       </div>
       
       <div className="mt-6 space-y-3">
-        <button className="w-full bg-[#56193f] text-white py-3 rounded-md font-medium hover:bg-[#3d1230]">
+        <button 
+          onClick={() => alert('Checkout functionality coming soon!')}
+          className="w-full bg-[#56193f] text-white py-3 rounded-md font-medium hover:bg-[#3d1230]"
+        >
           Checkout
         </button>
-        <button className="w-full bg-[#56193f] text-white py-3 rounded-md font-medium hover:bg-[#3d1230]">
-          Continue Shopping
-        </button>
+        <Link href="/" className="block">
+          <button className="w-full bg-white border-2 border-[#56193f] text-[#56193f] py-3 rounded-md font-medium hover:bg-gray-50">
+            Continue Shopping
+          </button>
+        </Link>
       </div>
     </div>
   );
 };
 
 // Cart Item Component
-const CartItem = ({ item }) => (
-  <div className="flex gap-4 py-6 border-b border-gray-200">
-    <div className="w-20 h-20 rounded-md overflow-hidden flex-shrink-0">
-      <Image 
-        src={item.image} 
-        alt={item.name} 
-        width={80} 
-        height={80} 
-        className="w-full h-full object-cover" 
-      />
-    </div>
-    
-    <div className="flex-1">
-      <h3 className="font-medium text-base">{item.name}</h3>
-      <p className="text-sm text-gray-600 mt-1">Colour: {item.color}</p>
-      <p className="text-sm text-gray-600">Size: {item.size}</p>
-      
-      <div className="mt-3">
-        <select defaultValue={item.quantity} className="text-sm border border-gray-300 rounded px-2 py-1">
-          <option value="1">Quantity 1 ▼</option>
-          <option value="2">Quantity 2 ▼</option>
-          <option value="3">Quantity 3 ▼</option>
-        </select>
+const CartItem = ({ item, onUpdateQuantity, onRemove }) => {
+  const handleQuantityChange = (e) => {
+    const newQuantity = parseInt(e.target.value);
+    onUpdateQuantity(item.id, newQuantity);
+  };
+
+  const handleRemove = () => {
+    onRemove(item.id);
+  };
+
+  return (
+    <div className="flex gap-4 py-6 border-b border-gray-200">
+      <div className="w-20 h-20 rounded-md overflow-hidden flex-shrink-0">
+        <Image 
+          src={item.product?.image || item.image} 
+          alt={item.product?.name || item.name} 
+          width={80} 
+          height={80} 
+          className="w-full h-full object-cover" 
+        />
       </div>
       
-      <div className="mt-4 flex items-center gap-4">
-        <div className="flex items-center gap-2">
-          <input type="radio" id={`ship-${item.id}`} name={`delivery-${item.id}`} className="w-4 h-4" defaultChecked />
-          <label htmlFor={`ship-${item.id}`} className="text-sm">Ship To An Address</label>
+      <div className="flex-1">
+        <h3 className="font-medium text-base">{item.product?.name || item.name}</h3>
+        <p className="text-sm text-gray-600 mt-1">Colour: {item.color}</p>
+        <p className="text-sm text-gray-600">Size: {item.size}</p>
+        
+        <div className="mt-3">
+          <select 
+            value={item.quantity} 
+            onChange={handleQuantityChange}
+            className="text-sm border border-gray-300 rounded px-2 py-1"
+          >
+            {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(num => (
+              <option key={num} value={num}>Quantity {num}</option>
+            ))}
+          </select>
         </div>
-        <button className="text-sm text-blue-600 hover:underline">Save For Later</button>
-        <button className="text-sm text-blue-600 hover:underline">Edit</button>
-        <button className="text-sm text-blue-600 hover:underline">Remove</button>
+        
+        <div className="mt-4 flex items-center gap-4">
+          <div className="flex items-center gap-2">
+            <input type="radio" id={`ship-${item.id}`} name={`delivery-${item.id}`} className="w-4 h-4" defaultChecked />
+            <label htmlFor={`ship-${item.id}`} className="text-sm">Ship To An Address</label>
+          </div>
+          <button className="text-sm text-gray-500 hover:text-gray-700">Save For Later</button>
+          <button 
+            onClick={handleRemove}
+            className="text-sm text-red-600 hover:text-red-800 hover:underline"
+          >
+            Remove
+          </button>
+        </div>
+        
+        <div className="mt-2 flex items-center gap-2">
+          <input type="radio" id={`pickup-${item.id}`} name={`delivery-${item.id}`} className="w-4 h-4" />
+          <label htmlFor={`pickup-${item.id}`} className="text-sm">Pick Up In Store</label>
+        </div>
       </div>
       
-      <div className="mt-2 flex items-center gap-2">
-        <input type="radio" id={`pickup-${item.id}`} name={`delivery-${item.id}`} className="w-4 h-4" />
-        <label htmlFor={`pickup-${item.id}`} className="text-sm">Pick Up In Store</label>
+      <div className="text-right">
+        <p className="font-semibold text-lg">${((item.product?.price || item.price || 0) * item.quantity).toFixed(2)}</p>
+        <p className="text-sm text-gray-600">${(item.product?.price || item.price || 0).toFixed(2)} each</p>
       </div>
     </div>
-    
-    <div className="text-right">
-      <p className="font-semibold text-lg">${item.price.toFixed(2)}</p>
-    </div>
-  </div>
-);
+  );
+};
 
 export default function CartPage() {
-  const { cartItems, loading } = useCart();
+  const { cartItems, loading, removeFromCart, updateCartItemQuantity } = useCart();
+
+  const handleUpdateQuantity = async (cartItemId, newQuantity) => {
+    await updateCartItemQuantity(cartItemId, newQuantity);
+  };
+
+  const handleRemoveItem = async (cartItemId) => {
+    if (confirm('Are you sure you want to remove this item from your cart?')) {
+      await removeFromCart(cartItemId);
+    }
+  };
 
   return (
     <div className="container mx-auto mt-43 px-4 py-8">
       {/* Header Navigation */}
       <div className="flex items-center gap-8 text-sm text-gray-600 mb-8 border-b border-gray-200 pb-4">
-        <button className="text-black border-b-2 border-black pb-2">HOME</button>
-        <button className="hover:text-black">WOMEN</button>
-        <button className="hover:text-black">MEN</button>
-        <button className="hover:text-black">KIDS</button>
+        <Link href="/" className="text-black border-b-2 border-black pb-2">HOME</Link>
+        <Link href="/women" className="hover:text-black">WOMEN</Link>
+        <Link href="/men" className="hover:text-black">MEN</Link>
+        <Link href="/kids" className="hover:text-black">KIDS</Link>
         <button className="hover:text-black">TAILORED</button>
         <button className="hover:text-black">ACCESSORIES</button>
       </div>
@@ -140,7 +175,12 @@ export default function CartPage() {
         <div className="flex flex-col lg:flex-row gap-8">
           <div className="flex-1">
             {cartItems.map(item => (
-              <CartItem key={`${item.id}-${item.size}-${item.color}`} item={item} />
+              <CartItem 
+                key={`${item.id}-${item.size}-${item.color}`} 
+                item={item} 
+                onUpdateQuantity={handleUpdateQuantity}
+                onRemove={handleRemoveItem}
+              />
             ))}
           </div>
           <div className="w-full lg:w-80">

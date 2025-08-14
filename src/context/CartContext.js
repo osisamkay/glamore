@@ -60,9 +60,56 @@ export function CartProvider({ children }) {
     }
   };
 
+  const removeFromCart = async (cartItemId) => {
+    try {
+      const response = await fetch(`/api/cart?id=${cartItemId}`, {
+        method: 'DELETE',
+      });
+
+      if (response.ok) {
+        await fetchCartItems();
+        return true;
+      } else {
+        console.error('Failed to remove item from cart');
+        return false;
+      }
+    } catch (error) {
+      console.error('Error removing item from cart:', error);
+      return false;
+    }
+  };
+
+  const updateCartItemQuantity = async (cartItemId, newQuantity) => {
+    try {
+      const response = await fetch('/api/cart', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          cartItemId,
+          quantity: newQuantity
+        }),
+      });
+
+      if (response.ok) {
+        await fetchCartItems();
+        return true;
+      } else {
+        console.error('Failed to update cart item quantity');
+        return false;
+      }
+    } catch (error) {
+      console.error('Error updating cart item quantity:', error);
+      return false;
+    }
+  };
+
   const value = {
     cartItems,
     addToCart,
+    removeFromCart,
+    updateCartItemQuantity,
     loading,
     refreshCart: fetchCartItems,
   };

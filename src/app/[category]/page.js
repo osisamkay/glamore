@@ -1,10 +1,28 @@
 import Layout from '../../components/Layout';
-import { featuredProducts } from '../../data/products';
 import CategoryClientPage from '../../components/CategoryClientPage';
 
-export default function CategoryPage({ params }) {
+// Fetch products by category from API
+async function getCategoryProducts(category) {
+  try {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3001'}/api/products?category=${category}`, {
+      cache: 'no-store' // Ensure fresh data
+    });
+    
+    if (!res.ok) {
+      return [];
+    }
+    
+    const data = await res.json();
+    return data.products || [];
+  } catch (error) {
+    console.error('Error fetching category products:', error);
+    return [];
+  }
+}
+
+export default async function CategoryPage({ params }) {
   const { category } = params;
-  const products = featuredProducts[category] || [];
+  const products = await getCategoryProducts(category);
 
   // A simple safeguard against invalid categories
   if (products.length === 0) {

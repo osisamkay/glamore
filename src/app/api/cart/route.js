@@ -103,6 +103,56 @@ export async function POST(request) {
   }
 }
 
+// PUT - Update cart item quantity
+export async function PUT(request) {
+  try {
+    const cookieStore = cookies();
+    const token = cookieStore.get('token')?.value;
+
+    if (!token) {
+      return NextResponse.json({ error: 'Not authenticated' }, { status: 401 });
+    }
+
+    const decoded = jwt.verify(token, process.env.JWT_SECRET || 'your-secret-key');
+    const userId = decoded.userId;
+
+    const { cartItemId, quantity } = await request.json();
+
+    if (!cartItemId || !quantity || quantity < 1) {
+      return NextResponse.json({ error: 'Invalid cart item ID or quantity' }, { status: 400 });
+    }
+
+    // Verify the cart item belongs to the user
+    const cartItem = await prisma.cartItem.findFirst({
+      where: {
+        id: cartItemId,
+        userId
+      },
+      include: { product: true }
+    });
+
+    if (!cartItem) {
+      return NextResponse.json({ error: 'Cart item not found' }, { status: 404 });
+    }
+
+    // Check if product has enough stock
+    if (cartItem.product.quantity < quantity) {
+      return NextResponse.json({ error: 'Insufficient stock' }, { status: 400 });
+    }
+
+    const updatedCartItem = await prisma.cartItem.update({
+      where: { id: cartItemId },
+      data: { quantity },
+      include: { product: true }
+    });
+
+    return NextResponse.json(updatedCartItem);
+  } catch (error) {
+    console.error('Error updating cart item:', error);
+    return NextResponse.json({ error: 'Failed to update cart item' }, { status: 500 });
+  }
+}
+
 // DELETE - Remove item from cart
 export async function DELETE(request) {
   try {

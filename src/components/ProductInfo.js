@@ -50,48 +50,78 @@ export default function ProductInfo({ product, onShowSizeGuide }) {
 
   return (
     <div className="space-y-6">
-      {/* Product Title and Price */}
+      {/* Product Title */}
       <div>
-        <h1 className="text-3xl font-light text-gray-900">{product.name}</h1>
-        <div className="flex items-center justify-between mt-2">
-          <p className="text-2xl font-medium text-gray-900">${product.price}</p>
-          <p className="text-sm text-gray-600">
-            {product.quantity > 10 ? (
-              <span className="text-green-600">✓ In Stock ({product.quantity} left)</span>
-            ) : product.quantity > 0 ? (
-              <span className="text-orange-600">⚠ Low Stock ({product.quantity} left)</span>
-            ) : (
-              <span className="text-red-600">✗ Out of Stock</span>
-            )}
-          </p>
+        <h1 className="text-2xl font-medium text-gray-900 mb-2">{product.name}</h1>
+        
+        {/* Star Rating */}
+        <div className="flex items-center mb-3">
+          <div className="flex items-center">
+            {[...Array(5)].map((_, i) => (
+              <svg
+                key={i}
+                className={`w-4 h-4 ${i < 4 ? 'text-yellow-400' : 'text-gray-300'}`}
+                fill="currentColor"
+                viewBox="0 0 20 20"
+              >
+                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+              </svg>
+            ))}
+          </div>
+          <span className="text-sm text-gray-600 ml-2">4 (67 Reviews)</span>
         </div>
+        
+        {/* Price */}
+        <p className="text-2xl font-bold text-gray-900">${product.price}</p>
       </div>
 
       {/* Product Description */}
       {product.description && (
         <div>
-          <h3 className="text-lg font-medium text-gray-900 mb-2">Description</h3>
-          <p className="text-gray-600 leading-relaxed">{product.description}</p>
+          <p className="text-gray-600 leading-relaxed text-sm">{product.description}</p>
         </div>
       )}
 
       {/* Color Selection */}
       <div>
-        <h3 className="text-lg font-medium text-gray-900 mb-3">Color</h3>
+        <div className="flex items-center gap-2 mb-3">
+          <span className="text-sm font-medium text-gray-900">Color:</span>
+          <span className="text-sm text-gray-600">{selectedColor}</span>
+        </div>
         <div className="flex flex-wrap gap-3">
-          {availableColors.map((color) => (
-            <button
-              key={color}
-              onClick={() => setSelectedColor(color)}
-              className={`px-4 py-2 text-sm font-medium border rounded-md ${
-                selectedColor === color
-                  ? 'border-[#56193f] bg-[#56193f] text-white'
-                  : 'border-gray-300 text-gray-700 hover:border-gray-400'
-              }`}
-            >
-              {color}
-            </button>
-          ))}
+          {availableColors.map((color) => {
+            // Map color names to actual colors for display
+            const colorMap = {
+              'Black': '#000000',
+              'White': '#FFFFFF',
+              'Red': '#EF4444',
+              'Blue': '#3B82F6',
+              'Green': '#10B981',
+              'Yellow': '#F59E0B',
+              'Purple': '#8B5CF6',
+              'Pink': '#EC4899',
+              'Gray': '#6B7280',
+              'Brown': '#92400E',
+              'Orange': '#F97316',
+              'Navy': '#1E3A8A',
+              'Beige': '#D2B48C',
+              'Multi-color': '#8B5CF6'
+            };
+            
+            return (
+              <button
+                key={color}
+                onClick={() => setSelectedColor(color)}
+                className={`w-8 h-8 rounded-full border-2 ${
+                  selectedColor === color
+                    ? 'border-[#56193f] ring-2 ring-[#56193f] ring-offset-2'
+                    : 'border-gray-300 hover:border-gray-400'
+                }`}
+                style={{ backgroundColor: colorMap[color] || '#8B5CF6' }}
+                title={color}
+              />
+            );
+          })}
         </div>
       </div>
 
@@ -99,7 +129,7 @@ export default function ProductInfo({ product, onShowSizeGuide }) {
       {availableSizes.length > 0 && (
         <div>
           <div className="flex items-center justify-between mb-3">
-            <h3 className="text-lg font-medium text-gray-900">Size</h3>
+            <span className="text-sm font-medium text-gray-900">Size: {selectedSize}</span>
             {onShowSizeGuide && (
               <button
                 onClick={onShowSizeGuide}
@@ -109,12 +139,12 @@ export default function ProductInfo({ product, onShowSizeGuide }) {
               </button>
             )}
           </div>
-          <div className="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-6 gap-2">
+          <div className="flex flex-wrap gap-2">
             {availableSizes.map((size) => (
               <button
                 key={size}
                 onClick={() => setSelectedSize(size)}
-                className={`py-2 px-3 text-sm font-medium border rounded-md ${
+                className={`py-2 px-4 text-sm font-medium border rounded ${
                   selectedSize === size
                     ? 'border-[#56193f] bg-[#56193f] text-white'
                     : 'border-gray-300 text-gray-700 hover:border-gray-400'
@@ -129,33 +159,50 @@ export default function ProductInfo({ product, onShowSizeGuide }) {
 
       {/* Quantity Selection */}
       <div>
-        <h3 className="text-lg font-medium text-gray-900 mb-3">Quantity</h3>
-        <div className="flex items-center space-x-3">
+        <span className="text-sm font-medium text-gray-900 mb-3 block">Quantity:</span>
+        <div className="flex items-center space-x-3 mb-6">
           <button
             onClick={() => setQuantity(Math.max(1, quantity - 1))}
-            className="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center text-gray-600 hover:border-gray-400"
+            className="w-8 h-8 rounded border border-gray-300 flex items-center justify-center text-gray-600 hover:border-gray-400"
           >
             -
           </button>
-          <span className="text-lg font-medium text-gray-900 w-8 text-center">{quantity}</span>
+          <span className="text-sm font-medium text-gray-900 w-8 text-center">{quantity}</span>
           <button
             onClick={() => setQuantity(quantity + 1)}
-            className="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center text-gray-600 hover:border-gray-400"
+            className="w-8 h-8 rounded border border-gray-300 flex items-center justify-center text-gray-600 hover:border-gray-400"
           >
             +
           </button>
         </div>
       </div>
 
-      {/* Add to Cart Button */}
-      <button
-        onClick={handleAddToCart}
-        disabled={isAddingToCart || !selectedSize || product.quantity === 0}
-        className="w-full bg-[#56193f] text-white py-3 px-6 rounded-md font-medium hover:bg-[#56193f]/90 focus:outline-none focus:ring-2 focus:ring-[#56193f] focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
-      >
-        {product.quantity === 0 ? 'Out of Stock' : 
-         isAddingToCart ? 'Adding to Cart...' : 'Add to Cart'}
-      </button>
+      {/* Action Buttons */}
+      <div className="flex items-center gap-3">
+        <button
+          onClick={handleAddToCart}
+          disabled={isAddingToCart || !selectedSize || product.quantity === 0}
+          className="flex-1 bg-[#56193f] text-white py-3 px-6 rounded font-medium hover:bg-[#56193f]/90 focus:outline-none focus:ring-2 focus:ring-[#56193f] focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          {product.quantity === 0 ? 'Out of Stock' : 
+           isAddingToCart ? 'Adding to Cart...' : 'Add To Cart'}
+        </button>
+        
+        <button
+          className="flex-1 bg-gray-900 text-white py-3 px-6 rounded font-medium hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-900 focus:ring-offset-2"
+        >
+          Buy Now
+        </button>
+        
+        <button
+          className="p-3 border border-gray-300 rounded hover:border-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
+          title="Add to Favorites"
+        >
+          <svg className="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+          </svg>
+        </button>
+      </div>
 
       {/* Product Details */}
       <div className="border-t pt-6">

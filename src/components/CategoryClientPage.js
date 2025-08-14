@@ -35,16 +35,18 @@ export default function CategoryClientPage({ initialProducts, category }) {
 
     // Filter by colors
     if (filters.colors.length > 0) {
-      tempProducts = tempProducts.filter(p =>
-        filters.colors.includes(p.color)
-      );
+      tempProducts = tempProducts.filter(p => {
+        const productColors = Array.isArray(p.colors) ? p.colors : (p.color ? [p.color] : []);
+        return filters.colors.some(filterColor => productColors.includes(filterColor));
+      });
     }
 
     // Filter by sizes
     if (filters.sizes.length > 0) {
-      tempProducts = tempProducts.filter(p =>
-        p.size.some(s => filters.sizes.includes(s))
-      );
+      tempProducts = tempProducts.filter(p => {
+        const productSizes = Array.isArray(p.sizes) ? p.sizes : (p.size ? (Array.isArray(p.size) ? p.size : [p.size]) : []);
+        return filters.sizes.some(filterSize => productSizes.includes(filterSize));
+      });
     }
     
     // Filter by price
@@ -85,11 +87,23 @@ export default function CategoryClientPage({ initialProducts, category }) {
   };
 
   const availableFilters = {
-    colors: [...new Set(initialProducts.flatMap(p => p.color))],
-    sizes: [...new Set(initialProducts.flatMap(p => p.size))],
-    labels: [...new Set(initialProducts.flatMap(p => p.tags))],
-    minPrice: Math.min(...initialProducts.map(p => p.price)),
-    maxPrice: Math.max(...initialProducts.map(p => p.price)),
+    colors: [...new Set(initialProducts.flatMap(p => {
+      // Handle colors as array or string
+      const colors = Array.isArray(p.colors) ? p.colors : (p.color ? [p.color] : []);
+      return colors;
+    }))],
+    sizes: [...new Set(initialProducts.flatMap(p => {
+      // Handle sizes as array or string
+      const sizes = Array.isArray(p.sizes) ? p.sizes : (p.size ? (Array.isArray(p.size) ? p.size : [p.size]) : []);
+      return sizes;
+    }))],
+    labels: [...new Set(initialProducts.flatMap(p => {
+      // Handle tags as array or string
+      const tags = Array.isArray(p.tags) ? p.tags : (p.tags ? [p.tags] : []);
+      return tags;
+    }))],
+    minPrice: Math.min(...initialProducts.map(p => p.price || 0)),
+    maxPrice: Math.max(...initialProducts.map(p => p.price || 0)),
   };
 
   return (
