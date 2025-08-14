@@ -13,6 +13,7 @@ export default function LoginPage() {
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [rememberMe, setRememberMe] = useState(false);
   const { login } = useAuth();
   const router = useRouter();
 
@@ -132,14 +133,41 @@ export default function LoginPage() {
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-0 top-9 text-gray-400 hover:text-gray-600"
+                className="absolute right-2 top-9 text-gray-400 hover:text-gray-600"
               >
-                {showPassword ? '🙈' : '👁'}
+                {showPassword ? '👁' : '👁'}
               </button>
               {errors.password && (
                 <p className="mt-1 text-sm text-red-600">{errors.password}</p>
               )}
             </div>
+            <div>
+           
+        
+
+            {/* Remember Me Checkbox */}
+            <div className="flex items-center">
+              <input
+                type="checkbox"
+                id="rememberMe"
+                checked={rememberMe}
+                onChange={(e) => setRememberMe(e.target.checked)}
+                className="h-4 w-4 rounded border-gray-300 text-[#56193f] focus:ring-[#56193f]"
+                style={{accentColor: '#56193f'}}
+              />
+              <label htmlFor="rememberMe" className="ml-2 text-sm text-gray-600">
+                Remember me
+              </label>
+            </div>
+            <div >
+            <p className="text-sm mt-3 text-gray-600">
+              <Link href="/reset-password" className="font-medium text-blue-600 hover:underline">
+                Forgot your password?
+              </Link>
+            </p>
+           
+          </div>
+          </div>
           </div>
 
           <button
@@ -153,14 +181,7 @@ export default function LoginPage() {
             {loading ? 'Signing In...' : 'Login'}
           </button>
 
-          <div className="text-center space-y-2 mt-6">
-            <p className="text-sm text-gray-600">
-              <Link href="/reset-password" className="font-medium text-blue-600 hover:underline">
-                Forgot your password?
-              </Link>
-            </p>
-           
-          </div>
+          
         </form>
       </div>
     </div>
