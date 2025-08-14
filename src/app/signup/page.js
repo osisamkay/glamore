@@ -105,17 +105,17 @@ export default function SignUpPage() {
         title="Success!"
         message="Your account has been created."
       />
-      <div className="min-h-screen bg-white flex flex-col justify-center py-12 px-4">
+      <div className="min-h-screen mt-20 bg-white flex flex-col justify-center py-12 px-4">
         <div className="max-w-sm mx-auto w-full">
           {/* Logo */}
-          <div className="text-center mb-12">
+          {/* <div className="text-center mb-12">
             <h1 className="text-3xl font-bold" style={{fontFamily: 'serif', color: '#56193f'}}>GGF</h1>
             <p className="text-xs text-gray-400 mt-1">GLAMORE</p>
-          </div>
+          </div> */}
 
           {/* Sign Up Form */}
           <form onSubmit={handleSubmit} className="space-y-6">
-            <h2 className="text-center text-2xl font-medium text-gray-900 mb-8">Sign Up</h2>
+            <h2 className="text-center text-2xl font-medium text-gray-900 mb-2">Sign Up</h2>
             
             <div className="text-center mb-6">
               <span className="text-sm text-gray-600">Already have an account? </span>
@@ -139,7 +139,7 @@ export default function SignUpPage() {
                   placeholder="XXXXXXX"
                   value={formData.firstName}
                   onChange={handleChange}
-                  className={`w-full px-0 py-3 border-0 border-b border-dotted border-gray-400 bg-transparent text-sm focus:outline-none placeholder-gray-400 ${
+                  className={`w-full px-0 py-3 border-1 border-b px-4 rounded-md border-gray-400 bg-transparent text-sm focus:outline-none placeholder-gray-400 ${
                     errors.firstName ? 'border-red-300' : ''
                   }`}
                   onFocus={(e) => e.target.style.borderColor = '#56193f'}
@@ -158,7 +158,7 @@ export default function SignUpPage() {
                   placeholder="XXXXXXX"
                   value={formData.lastName}
                   onChange={handleChange}
-                  className={`w-full px-0 py-3 border-0 border-b border-dotted border-gray-400 bg-transparent text-sm focus:outline-none placeholder-gray-400 ${
+                  className={`w-full px-0 py-3 border-1 border-b px-4 rounded-md border-gray-400 bg-transparent text-sm focus:outline-none placeholder-gray-400 ${
                     errors.lastName ? 'border-red-300' : ''
                   }`}
                   onFocus={(e) => e.target.style.borderColor = '#56193f'}
@@ -177,7 +177,7 @@ export default function SignUpPage() {
                   placeholder="XXXXXXX"
                   value={formData.email}
                   onChange={handleChange}
-                  className={`w-full px-0 py-3 border-0 border-b border-dotted border-gray-400 bg-transparent text-sm focus:outline-none placeholder-gray-400 ${
+                  className={`w-full px-0 py-3 border-1 border-b px-4 rounded-md border-gray-400 bg-transparent text-sm focus:outline-none placeholder-gray-400 ${
                     errors.email ? 'border-red-300' : ''
                   }`}
                   onFocus={(e) => e.target.style.borderColor = '#56193f'}
@@ -196,7 +196,7 @@ export default function SignUpPage() {
                   placeholder="XXXXXXX"
                   value={formData.password}
                   onChange={handleChange}
-                  className={`w-full px-0 py-3 border-0 border-b border-dotted border-gray-400 bg-transparent text-sm focus:outline-none placeholder-gray-400 pr-10 ${
+                  className={`w-full px-0 py-3 border-1 border-b px-4 rounded-md border-gray-400 bg-transparent text-sm focus:outline-none placeholder-gray-400 pr-10 ${
                     errors.password ? 'border-red-300' : ''
                   }`}
                   onFocus={(e) => e.target.style.borderColor = '#56193f'}
@@ -205,9 +205,18 @@ export default function SignUpPage() {
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-0 top-9 text-gray-400 hover:text-gray-600"
+                  className="absolute right-5 top-9 text-gray-400 hover:text-gray-600"
                 >
-                  {showPassword ? '🙈' : '👁'}
+{showPassword ? (
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.878 9.878L3 3m6.878 6.878L21 21" />
+                    </svg>
+                  ) : (
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                    </svg>
+                  )}
                 </button>
                 {errors.password && (
                   <p className="mt-1 text-sm text-red-600">{errors.password}</p>
@@ -222,7 +231,7 @@ export default function SignUpPage() {
                   placeholder="XXXXXXX"
                   value={formData.confirmPassword}
                   onChange={handleChange}
-                  className={`w-full px-0 py-3 border-0 border-b border-dotted border-gray-400 bg-transparent text-sm focus:outline-none placeholder-gray-400 pr-10 ${
+                  className={`w-full px-0 py-3 border-1 border-b px-4 rounded-md border-gray-400 bg-transparent text-sm focus:outline-none placeholder-gray-400 pr-10 ${
                     errors.confirmPassword ? 'border-red-300' : ''
                   }`}
                   onFocus={(e) => e.target.style.borderColor = '#56193f'}
@@ -231,9 +240,18 @@ export default function SignUpPage() {
                 <button
                   type="button"
                   onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                  className="absolute right-0 top-9 text-gray-400 hover:text-gray-600"
+                  className="absolute right-5 top-9 text-gray-400 hover:text-gray-600"
                 >
-                  {showConfirmPassword ? '🙈' : '👁'}
+{showConfirmPassword ? (
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.878 9.878L3 3m6.878 6.878L21 21" />
+                    </svg>
+                  ) : (
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                    </svg>
+                  )}
                 </button>
                 {errors.confirmPassword && (
                   <p className="mt-1 text-sm text-red-600">{errors.confirmPassword}</p>
