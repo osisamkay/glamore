@@ -39,10 +39,10 @@ export function CartProvider({ children }) {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          productId: item.id,
+          productId: item.id || item.productId,
           size: item.size,
           color: item.color,
-          quantity: item.quantity
+          quantity: item.quantity || 1
         }),
       });
 

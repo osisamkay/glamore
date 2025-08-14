@@ -4,7 +4,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useState } from 'react';
 
-export default function Navbar() {
+export default function Navbar({ type }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
@@ -53,7 +53,7 @@ export default function Navbar() {
       </div>
 
       {/* Sub-navigation bar */}
-      <div className="bg-white text-black">
+      {type !== 'nobottom' && <div className="bg-white text-black">
         <div className="container max-w-[1146px] mx-auto px-6 py-6 flex justify-between items-center space-x-12 text-sm font-medium uppercase tracking-wider">
             <Link href="/" className="hover:text-[#56193f]">Home</Link>
             <Link href="/women" className="hover:text-[#56193f]">Women</Link>
@@ -63,7 +63,7 @@ export default function Navbar() {
             <Link href="/accessories" className="hover:text-[#56193f]">Accessories</Link>
             <Link href="/enquiry" className="hover:text-[#56193f]">Enquiry</Link>
         </div>
-      </div>
+      </div>}
 
       {/* Hamburger Menu (Dropdown) */}
       {isMenuOpen && (

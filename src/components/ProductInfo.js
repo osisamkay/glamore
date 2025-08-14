@@ -6,6 +6,7 @@ import { useCart } from '@/context/CartContext';
 import { useAuth } from '@/context/AuthContext';
 
 export default function ProductInfo({ product, onShowSizeGuide }) {
+
   // Handle colors and sizes that may be arrays or comma-separated strings
   const availableColors = Array.isArray(product.colors) 
     ? product.colors 
@@ -32,8 +33,12 @@ export default function ProductInfo({ product, onShowSizeGuide }) {
 
     setIsAddingToCart(true);
     const itemToAdd = {
-      ...product,
-      color: selectedColor,
+      id: product.id,
+      productId: product.id,
+      name: product.name,
+      image: product.image,
+      price: product.price,
+      color: selectedColor || "Purple",
       size: selectedSize,
       quantity: quantity,
     };
@@ -211,7 +216,7 @@ export default function ProductInfo({ product, onShowSizeGuide }) {
           <li><strong>Category:</strong> {product.category}</li>
           <li><strong>Available Colors:</strong> {availableColors.join(', ')}</li>
           <li><strong>Available Sizes:</strong> {availableSizes.join(', ')}</li>
-          <li><strong>Selected:</strong> {selectedColor} • {selectedSize}</li>
+          <li><strong>Selected:</strong> {selectedColor || "Purple"} • {selectedSize}</li>
           <li><strong>Stock Status:</strong> {product.quantity} items remaining</li>
         </ul>
       </div>

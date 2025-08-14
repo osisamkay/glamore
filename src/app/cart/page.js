@@ -3,15 +3,20 @@
 import { useCart } from '@/context/CartContext';
 import Link from 'next/link';
 import Image from 'next/image';
-
+import Layout from '@/components/Layout';
 // Order Summary Component
 const OrderSummary = ({ items }) => {
-  const subtotal = items.reduce((acc, item) => acc + (item.price || 0) * (item.quantity || 1), 0);
+  const subtotal = items.reduce((acc, item) => {
+    const price = item.product?.price || item.price || 0;
+    const quantity = item.quantity || 1;
+    return acc + (price * quantity);
+  }, 0);
   const salesTax = subtotal * 0.13;
-  const shipping = 5.99;
+  const shipping = subtotal > 0 ? 5.99 : 0;
   const total = subtotal + salesTax + shipping;
 
   return (
+
     <div className="bg-gray-50 p-6 rounded-lg">
       <h2 className="text-lg font-semibold mb-4">Order Summary</h2>
       <div className="space-y-3 text-sm">
@@ -62,6 +67,7 @@ const OrderSummary = ({ items }) => {
         </Link>
       </div>
     </div>
+   
   );
 };
 
@@ -78,12 +84,12 @@ const CartItem = ({ item, onUpdateQuantity, onRemove }) => {
 
   return (
     <div className="flex gap-4 py-6 border-b border-gray-200">
-      <div className="w-20 h-20 rounded-md overflow-hidden flex-shrink-0">
+      <div className="w-[274px] h-[315px] rounded-md overflow-hidden flex-shrink-0">
         <Image 
           src={item.product?.image || item.image} 
           alt={item.product?.name || item.name} 
-          width={80} 
-          height={80} 
+          width={274} 
+          height={315} 
           className="w-full h-full object-cover" 
         />
       </div>
@@ -105,7 +111,7 @@ const CartItem = ({ item, onUpdateQuantity, onRemove }) => {
           </select>
         </div>
         
-        <div className="mt-4 flex items-center gap-4">
+        <div className="mt-40 flex items-center  gap-4">
           <div className="flex items-center gap-2">
             <input type="radio" id={`ship-${item.id}`} name={`delivery-${item.id}`} className="w-4 h-4" defaultChecked />
             <label htmlFor={`ship-${item.id}`} className="text-sm">Ship To An Address</label>
@@ -147,18 +153,19 @@ export default function CartPage() {
   };
 
   return (
-    <div className="container mx-auto mt-43 px-4 py-8">
+    <Layout type="nobottom">
+    <div className="container mx-auto mt-23 px-4 py-8">
       {/* Header Navigation */}
-      <div className="flex items-center gap-8 text-sm text-gray-600 mb-8 border-b border-gray-200 pb-4">
+      {/* <div className="flex items-center gap-8 text-sm text-gray-600 mb-8 border-b border-gray-200 pb-4">
         <Link href="/" className="text-black border-b-2 border-black pb-2">HOME</Link>
         <Link href="/women" className="hover:text-black">WOMEN</Link>
         <Link href="/men" className="hover:text-black">MEN</Link>
         <Link href="/kids" className="hover:text-black">KIDS</Link>
         <button className="hover:text-black">TAILORED</button>
         <button className="hover:text-black">ACCESSORIES</button>
-      </div>
+      </div> */}
 
-      <h1 className="text-2xl font-semibold mb-6">My Cart ({cartItems.length} Items)</h1>
+      
 
       {loading ? (
         <div className="text-center py-20">
@@ -172,8 +179,18 @@ export default function CartPage() {
           </Link>
         </div>
       ) : (
-        <div className="flex flex-col lg:flex-row gap-8">
+        <div className="flex flex-col lg:flex-row gap-18">
           <div className="flex-1">
+             {/* Header Navigation */}
+      <div className="flex items-center gap-8 text-sm text-gray-600 mb-8 border-b border-gray-200 pb-4">
+        <Link href="/" className="text-black border-b-2 border-black pb-2">HOME</Link>
+        <Link href="/women" className="hover:text-black">WOMEN</Link>
+        <Link href="/men" className="hover:text-black">MEN</Link>
+        <Link href="/kids" className="hover:text-black">KIDS</Link>
+        <button className="hover:text-black">TAILORED</button>
+        <button className="hover:text-black">ACCESSORIES</button>
+      </div>
+            <h1 className="text-2xl font-semibold mb-6">My Cart ({cartItems.length} Items)</h1>
             {cartItems.map(item => (
               <CartItem 
                 key={`${item.id}-${item.size}-${item.color}`} 
@@ -183,11 +200,12 @@ export default function CartPage() {
               />
             ))}
           </div>
-          <div className="w-full lg:w-80">
+          <div className="w-full lg:w-80 h-full">
             <OrderSummary items={cartItems} />
           </div>
         </div>
       )}
     </div>
+    </Layout>
   );
 }

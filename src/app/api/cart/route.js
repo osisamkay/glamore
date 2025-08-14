@@ -48,7 +48,10 @@ export async function POST(request) {
 
     const { productId, size, color, quantity = 1 } = await request.json();
 
+    console.log('Cart API - Received data:', { productId, size, color, quantity });
+
     if (!productId || !size || !color) {
+      console.log('Cart API - Missing required fields:', { productId: !!productId, size: !!size, color: !!color });
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
     }
 
