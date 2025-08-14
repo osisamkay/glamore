@@ -1,0 +1,153 @@
+"use client";
+
+import { useCart } from '@/context/CartContext';
+import Link from 'next/link';
+import Image from 'next/image';
+
+// Order Summary Component
+const OrderSummary = ({ items }) => {
+  const subtotal = items.reduce((acc, item) => acc + item.price * item.quantity, 0);
+  const salesTax = subtotal * 0.13;
+  const shipping = 5.99;
+  const total = subtotal + salesTax + shipping;
+
+  return (
+    <div className="bg-gray-50 p-6 rounded-lg">
+      <h2 className="text-lg font-semibold mb-4">Order Summary</h2>
+      <div className="space-y-3 text-sm">
+        <div className="flex justify-between">
+          <span>Sub total ({items.length}):</span>
+          <span>${subtotal.toFixed(2)}</span>
+        </div>
+        <div className="flex justify-between">
+          <span>Sales Tax</span>
+          <span>${salesTax.toFixed(2)}</span>
+        </div>
+        <div className="flex justify-between">
+          <span>Shipping</span>
+          <span>${shipping.toFixed(2)}</span>
+        </div>
+        <hr className="my-3" />
+        <div className="flex justify-between font-semibold text-base">
+          <span>Estimated Total</span>
+          <span>${total.toFixed(2)}</span>
+        </div>
+      </div>
+      
+      <div className="mt-6">
+        <h3 className="font-medium mb-3">Apply Promo Code</h3>
+        <div className="flex">
+          <input 
+            type="text" 
+            placeholder="" 
+            className="flex-1 px-3 py-2 border border-gray-300 rounded-l-md text-sm focus:outline-none focus:ring-1 focus:ring-[#56193f]" 
+          />
+          <button className="bg-[#56193f] text-white px-4 py-2 rounded-r-md text-sm hover:bg-[#3d1230]">
+            Apply
+          </button>
+        </div>
+      </div>
+      
+      <div className="mt-6 space-y-3">
+        <button className="w-full bg-[#56193f] text-white py-3 rounded-md font-medium hover:bg-[#3d1230]">
+          Checkout
+        </button>
+        <button className="w-full bg-[#56193f] text-white py-3 rounded-md font-medium hover:bg-[#3d1230]">
+          Continue Shopping
+        </button>
+      </div>
+    </div>
+  );
+};
+
+// Cart Item Component
+const CartItem = ({ item }) => (
+  <div className="flex gap-4 py-6 border-b border-gray-200">
+    <div className="w-20 h-20 rounded-md overflow-hidden flex-shrink-0">
+      <Image 
+        src={item.image} 
+        alt={item.name} 
+        width={80} 
+        height={80} 
+        className="w-full h-full object-cover" 
+      />
+    </div>
+    
+    <div className="flex-1">
+      <h3 className="font-medium text-base">{item.name}</h3>
+      <p className="text-sm text-gray-600 mt-1">Colour: {item.color}</p>
+      <p className="text-sm text-gray-600">Size: {item.size}</p>
+      
+      <div className="mt-3">
+        <select defaultValue={item.quantity} className="text-sm border border-gray-300 rounded px-2 py-1">
+          <option value="1">Quantity 1 ▼</option>
+          <option value="2">Quantity 2 ▼</option>
+          <option value="3">Quantity 3 ▼</option>
+        </select>
+      </div>
+      
+      <div className="mt-4 flex items-center gap-4">
+        <div className="flex items-center gap-2">
+          <input type="radio" id={`ship-${item.id}`} name={`delivery-${item.id}`} className="w-4 h-4" defaultChecked />
+          <label htmlFor={`ship-${item.id}`} className="text-sm">Ship To An Address</label>
+        </div>
+        <button className="text-sm text-blue-600 hover:underline">Save For Later</button>
+        <button className="text-sm text-blue-600 hover:underline">Edit</button>
+        <button className="text-sm text-blue-600 hover:underline">Remove</button>
+      </div>
+      
+      <div className="mt-2 flex items-center gap-2">
+        <input type="radio" id={`pickup-${item.id}`} name={`delivery-${item.id}`} className="w-4 h-4" />
+        <label htmlFor={`pickup-${item.id}`} className="text-sm">Pick Up In Store</label>
+      </div>
+    </div>
+    
+    <div className="text-right">
+      <p className="font-semibold text-lg">${item.price.toFixed(2)}</p>
+    </div>
+  </div>
+);
+
+export default function CartPage() {
+  const { cartItems, loading } = useCart();
+
+  return (
+    <div className="container mx-auto mt-43 px-4 py-8">
+      {/* Header Navigation */}
+      <div className="flex items-center gap-8 text-sm text-gray-600 mb-8 border-b border-gray-200 pb-4">
+        <button className="text-black border-b-2 border-black pb-2">HOME</button>
+        <button className="hover:text-black">WOMEN</button>
+        <button className="hover:text-black">MEN</button>
+        <button className="hover:text-black">KIDS</button>
+        <button className="hover:text-black">TAILORED</button>
+        <button className="hover:text-black">ACCESSORIES</button>
+      </div>
+
+      <h1 className="text-2xl font-semibold mb-6">My Cart ({cartItems.length} Items)</h1>
+
+      {loading ? (
+        <div className="text-center py-20">
+          <p className="text-xl">Loading cart...</p>
+        </div>
+      ) : cartItems.length === 0 ? (
+        <div className="text-center py-20">
+          <p className="text-2xl mb-4">Your cart is empty.</p>
+          <Link href="/" className="text-[#56193f] hover:underline font-semibold">
+            Continue Shopping
+          </Link>
+        </div>
+      ) : (
+        <div className="flex flex-col lg:flex-row gap-8">
+          <div className="flex-1">
+            {cartItems.map(item => (
+              <CartItem key={`${item.id}-${item.size}-${item.color}`} item={item} />
+            ))}
+          </div>
+          <div className="w-full lg:w-80">
+            <OrderSummary items={cartItems} />
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}

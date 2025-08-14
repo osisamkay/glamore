@@ -1,0 +1,168 @@
+"use client";
+
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { useAuth } from '@/context/AuthContext';
+import Link from 'next/link';
+
+export default function LoginPage() {
+  const [formData, setFormData] = useState({
+    email: '',
+    password: ''
+  });
+  const [errors, setErrors] = useState({});
+  const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const { login } = useAuth();
+  const router = useRouter();
+
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value
+    });
+    // Clear error when user starts typing
+    if (errors[e.target.name]) {
+      setErrors({
+        ...errors,
+        [e.target.name]: ''
+      });
+    }
+  };
+
+  const validateForm = () => {
+    const newErrors = {};
+
+    if (!formData.email.trim()) {
+      newErrors.email = 'Email is required';
+    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+      newErrors.email = 'Email is invalid';
+    }
+
+    if (!formData.password) {
+      newErrors.password = 'Password is required';
+    }
+
+    return newErrors;
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    
+    const newErrors = validateForm();
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      return;
+    }
+
+    setLoading(true);
+    setErrors({});
+
+    const result = await login(formData.email, formData.password);
+    setLoading(false);
+
+    if (result.success) {
+      router.push('/'); // Redirect to home page after successful login
+    } else {
+      setErrors({ general: result.error });
+    }
+  };
+
+  return (
+    <div className="min-h-screen bg-white flex flex-col justify-center py-12 px-4">
+      <div className="max-w-sm mx-auto w-full">
+        {/* Logo */}
+        {/* <div className="text-center mb-12">
+          <h1 className="text-3xl font-bold" style={{fontFamily: 'serif', color: '#56193f'}}>GGF</h1>
+          <p className="text-xs text-gray-400 mt-1">GLAMORE</p>
+        </div> */}
+
+        {/* Login Form */}
+        <form onSubmit={handleSubmit}>
+          <h2 className="text-center text-2xl font-bold text-gray-900 ">Login</h2>
+          <p className="text-center text-sm text-gray-600 mb-8">
+              Don't have an account?{' '}
+              <Link href="/signup" className="font-medium text-blue-600 hover:underline">
+                Sign up
+              </Link>
+            </p>
+
+          {errors.general && (
+            <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-md text-sm">
+              {errors.general}
+            </div>
+          )}
+
+          <div className="space-y-8">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+              <input
+                type="email"
+                name="email"
+                placeholder="XXXXXXX"
+                value={formData.email}
+                onChange={handleChange}
+                className={`w-full px-0 py-3 border-1 border-b px-4 rounded-md border-gray-400 bg-transparent text-sm focus:outline-none placeholder-gray-400 ${
+                  errors.email ? 'border-red-300' : ''
+                }`}
+                style={{'--tw-ring-color': '#56193f'}}
+                onFocus={(e) => e.target.style.borderColor = '#56193f'}
+                onBlur={(e) => e.target.style.borderColor = '#9ca3af'}
+              />
+              {errors.email && (
+                <p className="mt-1 text-sm text-red-600">{errors.email}</p>
+              )}
+            </div>
+
+            <div className="relative">
+              <label className="block text-sm font-medium text-gray-700 mb-1">Password</label>
+              <input
+                type={showPassword ? "text" : "password"}
+                name="password"
+                placeholder="XXXXXXX"
+                value={formData.password}
+                onChange={handleChange}
+                className={`w-full px-0 py-3 border-1 border-b px-4 rounded-md  border-gray-400 bg-transparent text-sm focus:outline-none placeholder-gray-400 pr-10 ${
+                  errors.password ? 'border-red-300' : ''
+                }`}
+                style={{'--tw-ring-color': '#56193f'}}
+                onFocus={(e) => e.target.style.borderColor = '#56193f'}
+                onBlur={(e) => e.target.style.borderColor = '#9ca3af'}
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-0 top-9 text-gray-400 hover:text-gray-600"
+              >
+                {showPassword ? '🙈' : '👁'}
+              </button>
+              {errors.password && (
+                <p className="mt-1 text-sm text-red-600">{errors.password}</p>
+              )}
+            </div>
+          </div>
+
+          <button
+            type="submit"
+            disabled={loading}
+            className="w-full mt-8 py-3 px-4 text-white rounded-md text-sm font-medium focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
+            style={{backgroundColor: '#56193f', borderColor: '#56193f'}}
+            onMouseEnter={(e) => e.target.style.backgroundColor = '#3d1230'}
+            onMouseLeave={(e) => e.target.style.backgroundColor = '#56193f'}
+          >
+            {loading ? 'Signing In...' : 'Login'}
+          </button>
+
+          <div className="text-center space-y-2 mt-6">
+            <p className="text-sm text-gray-600">
+              <Link href="/reset-password" className="font-medium text-blue-600 hover:underline">
+                Forgot your password?
+              </Link>
+            </p>
+           
+          </div>
+        </form>
+      </div>
+    </div>
+  );
+}

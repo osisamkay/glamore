@@ -44,9 +44,9 @@ export default function Navbar() {
               </svg>
             </Link>
             <div className="hidden md:flex items-center space-x-2">
-              <Link href="/signin">Sign in</Link>
+              <Link href="/login">Sign in</Link>
               <span>|</span>
-              <Link href="/register">Register</Link>
+              <Link href="/signup">Register</Link>
             </div>
           </div>
         </div>
@@ -55,13 +55,13 @@ export default function Navbar() {
       {/* Sub-navigation bar */}
       <div className="bg-white text-black">
         <div className="container max-w-[1146px] mx-auto px-6 py-6 flex justify-between items-center space-x-12 text-sm font-medium uppercase tracking-wider">
-            <Link href="/" className="hover:text-purple-700">Home</Link>
-            <Link href="/women" className="hover:text-purple-700">Women</Link>
-            <Link href="/men" className="hover:text-purple-700">Men</Link>
-            <Link href="/kids" className="hover:text-purple-700">Kids</Link>
-            <Link href="/tailored" className="hover:text-purple-700">Tailored</Link>
-            <Link href="/accessories" className="hover:text-purple-700">Accessories</Link>
-            <Link href="/enquiry" className="hover:text-purple-700">Enquiry</Link>
+            <Link href="/" className="hover:text-[#56193f]">Home</Link>
+            <Link href="/women" className="hover:text-[#56193f]">Women</Link>
+            <Link href="/men" className="hover:text-[#56193f]">Men</Link>
+            <Link href="/kids" className="hover:text-[#56193f]">Kids</Link>
+            <Link href="/tailored" className="hover:text-[#56193f]">Tailored</Link>
+            <Link href="/accessories" className="hover:text-[#56193f]">Accessories</Link>
+            <Link href="/enquiry" className="hover:text-[#56193f]">Enquiry</Link>
         </div>
       </div>
 

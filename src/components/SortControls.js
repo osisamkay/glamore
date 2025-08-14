@@ -38,7 +38,7 @@ export default function SortControls({ onSortChange, onSearchChange, resultCount
             type="search" 
             placeholder="Search in this category..."
             onChange={(e) => onSearchChange(e.target.value)}
-            className="border border-gray-300 rounded-full pl-10 pr-4 py-2 w-full md:w-64 focus:outline-none focus:ring-2 focus:ring-purple-500"
+            className="border border-gray-300 rounded-full pl-10 pr-4 py-2 w-full md:w-64 focus:outline-none focus:ring-2 focus:ring-[#56193f]"
           />
           <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
               <SearchIcon />
@@ -56,7 +56,7 @@ export default function SortControls({ onSortChange, onSearchChange, resultCount
               onClick={() => handleSortClick(key)}
               className={`text-sm font-medium px-4 py-2 rounded-full transition-colors ${ 
                 activeSort === key 
-                ? 'bg-purple-100 text-purple-700' 
+                ? 'text-[#56193f]' 
                 : 'text-gray-500 hover:bg-gray-100'
               }`}>
               {value}

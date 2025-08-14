@@ -77,7 +77,7 @@ export default function FilterSidebar({ onFilterChange, availableFilters }) {
               <label key={label} className="flex items-center">
                 <input 
                   type="checkbox" 
-                  className="mr-2 h-4 w-4 rounded text-purple-600 focus:ring-purple-500 border-gray-300"
+                  className="mr-2 h-4 w-4 rounded text-[#56193f] focus:ring-[#56193f] border-gray-300"
                   checked={filters.labels.includes(label)}
                   onChange={() => handleCheckboxChange('labels', label)}
                 /> {label}
@@ -110,7 +110,7 @@ export default function FilterSidebar({ onFilterChange, availableFilters }) {
               <label key={color} className="flex items-center">
                 <input 
                   type="checkbox" 
-                  className="mr-2 h-4 w-4 rounded text-purple-600 focus:ring-purple-500 border-gray-300"
+                  className="mr-2 h-4 w-4 rounded text-[#56193f] focus:ring-[#56193f] border-gray-300"
                   checked={filters.colors.includes(color)}
                   onChange={() => handleCheckboxChange('colors', color)}
                 /> {color}
@@ -127,7 +127,7 @@ export default function FilterSidebar({ onFilterChange, availableFilters }) {
               <label key={size} className="flex items-center">
                 <input 
                   type="checkbox" 
-                  className="mr-2 h-4 w-4 rounded text-purple-600 focus:ring-purple-500 border-gray-300"
+                  className="mr-2 h-4 w-4 rounded text-[#56193f] focus:ring-[#56193f] border-gray-300"
                   checked={filters.sizes.includes(size)}
                   onChange={() => handleCheckboxChange('sizes', size)}
                 /> {size}
