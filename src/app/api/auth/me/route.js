@@ -1,9 +1,8 @@
 import { NextResponse } from 'next/server';
-import { PrismaClient } from '@/generated/prisma';
+import { prisma } from '@/lib/db';
 import { cookies } from 'next/headers';
 import jwt from 'jsonwebtoken';
 
-const prisma = new PrismaClient();
 
 export async function GET() {
   try {

@@ -105,13 +105,13 @@ export default function ProductDetailClientPage({ product }) {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-16">
         {/* Product Image */}
         <div className="w-full">
-          <div className="aspect-square w-full overflow-hidden rounded-lg bg-gray-100">
+          <div className=" w-full h-full max-h-[480px] overflow-hidden rounded-lg  ">
             <Image
               src={product.image}
               alt={product.name}
               width={600}
               height={600}
-              className="w-full h-full object-center object-cover"
+              className="object-contain w-full h-full "
               priority
             />
           </div>

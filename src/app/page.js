@@ -39,7 +39,7 @@ export default function Home() {
         ]);
 
         setLatestProducts({
-          women: womenData.products.reverse() || [],
+          women: womenData.products || [],
           men: menData.products || [],
           kids: kidsData.products || []
         });

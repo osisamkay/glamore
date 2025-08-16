@@ -133,16 +133,10 @@ export default function ProductInfo({ product, onShowSizeGuide }) {
       {/* Size Selection */}
       {availableSizes.length > 0 && (
         <div>
+         
           <div className="flex items-center justify-between mb-3">
             <span className="text-sm font-medium text-gray-900">Size: {selectedSize}</span>
-            {onShowSizeGuide && (
-              <button
-                onClick={onShowSizeGuide}
-                className="text-sm text-[#56193f] hover:text-[#56193f]/80 underline"
-              >
-                View Size Chart
-              </button>
-            )}
+            
           </div>
           <div className="flex flex-wrap gap-2">
             {availableSizes.map((size) => (
@@ -161,18 +155,28 @@ export default function ProductInfo({ product, onShowSizeGuide }) {
           </div>
         </div>
       )}
-
+      <div className="flex items-center justify-between mb-3">
+            {onShowSizeGuide && (
+              <button
+                onClick={onShowSizeGuide}
+                className="text-sm text-[#56193f] hover:text-[#56193f]/80 underline"
+              >
+                View Size Chart
+              </button>
+            )}
+          </div>
+      <div className="flex items-center justify-between gap-6">
       {/* Quantity Selection */}
       <div>
         <span className="text-sm font-medium text-gray-900 mb-3 block">Quantity:</span>
-        <div className="flex items-center space-x-3 mb-6">
+        <div className="flex items-center space-x-1 mb-6">
           <button
             onClick={() => setQuantity(Math.max(1, quantity - 1))}
             className="w-8 h-8 rounded border border-gray-300 flex items-center justify-center text-gray-600 hover:border-gray-400"
           >
             -
           </button>
-          <span className="text-sm font-medium text-gray-900 w-8 text-center">{quantity}</span>
+          <span className="text-sm rounded w-8 h-8 border border-gray-300 font-medium flex items-center justify-center text-gray-600 text-gray-900 w-8 text-center">{quantity}</span>
           <button
             onClick={() => setQuantity(quantity + 1)}
             className="w-8 h-8 rounded border border-gray-300 flex items-center justify-center text-gray-600 hover:border-gray-400"
@@ -183,24 +187,24 @@ export default function ProductInfo({ product, onShowSizeGuide }) {
       </div>
 
       {/* Action Buttons */}
-      <div className="flex items-center gap-3">
+      <div className="flex flex-1 items-center gap-3">
         <button
           onClick={handleAddToCart}
           disabled={isAddingToCart || !selectedSize || product.quantity === 0}
-          className="flex-1 bg-[#56193f] text-white py-3 px-6 rounded font-medium hover:bg-[#56193f]/90 focus:outline-none focus:ring-2 focus:ring-[#56193f] focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
+          className="flex-1 bg-[#56193f] w-full max-w-[148px] text-white py-3 px-6 rounded font-medium hover:bg-[#56193f]/90 focus:outline-none focus:ring-2 focus:ring-[#56193f] focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {product.quantity === 0 ? 'Out of Stock' : 
            isAddingToCart ? 'Adding to Cart...' : 'Add To Cart'}
         </button>
         
         <button
-          className="flex-1 bg-gray-900 text-white py-3 px-6 rounded font-medium hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-900 focus:ring-offset-2"
+          className="flex-1 w-full max-w-[148px] bg-gray-900 text-white py-3 px-6 rounded font-medium hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-900 focus:ring-offset-2"
         >
           Buy Now
         </button>
         
         <button
-          className="p-3 border border-gray-300 rounded hover:border-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
+          className="p-3 border border-gray-300 rounded-full hover:border-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
           title="Add to Favorites"
         >
           <svg className="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -208,9 +212,10 @@ export default function ProductInfo({ product, onShowSizeGuide }) {
           </svg>
         </button>
       </div>
+      </div>
 
       {/* Product Details */}
-      <div className="border-t pt-6">
+      {/* <div className="border-t pt-6">
         <h3 className="text-lg font-medium text-gray-900 mb-3">Product Details</h3>
         <ul className="text-gray-600 space-y-1">
           <li><strong>Category:</strong> {product.category}</li>
@@ -219,7 +224,7 @@ export default function ProductInfo({ product, onShowSizeGuide }) {
           <li><strong>Selected:</strong> {selectedColor || "Purple"} • {selectedSize}</li>
           <li><strong>Stock Status:</strong> {product.quantity} items remaining</li>
         </ul>
-      </div>
+      </div> */}
     </div>
   );
 }

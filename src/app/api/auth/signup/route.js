@@ -1,9 +1,7 @@
 import { NextResponse } from 'next/server';
-import { PrismaClient } from '@/generated/prisma';
+import { prisma } from '@/lib/db';
 import bcrypt from 'bcryptjs';
 import { sendWelcomeEmail } from '@/lib/email';
-
-const prisma = new PrismaClient();
 
 export async function POST(request) {
   try {
