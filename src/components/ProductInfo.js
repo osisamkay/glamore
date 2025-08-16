@@ -110,7 +110,21 @@ export default function ProductInfo({ product, onShowSizeGuide }) {
               'Orange': '#F97316',
               'Navy': '#1E3A8A',
               'Beige': '#D2B48C',
-              'Multi-color': '#8B5CF6'
+              'Multi-color': '#8B5CF6',
+              'Gold': '#FFD700',
+              'Silver': '#C0C0C0',
+              'Bronze': '#CD7F32',
+              'Rose Gold': '#E8B4A0',
+              'Khaki': '#F0E68C',
+              'Dark Brown': '#654321',
+              'Tan': '#D2B48C',
+              'Coral': '#F08080',
+              'Magenta': '#FF00FF',
+              'Cyan': '#00FFFF',
+              'Lavender': '#E6E6FA',
+              'Salmon': '#FA8072',
+              'Periwinkle': '#C9C9FF',
+              'Azure': '#F0FFFF',
             };
             
             return (
