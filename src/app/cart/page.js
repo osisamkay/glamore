@@ -1,65 +1,163 @@
 "use client";
 
+import { useState } from 'react';
 import { useCart } from '@/context/CartContext';
 import Link from 'next/link';
 import Image from 'next/image';
 import Layout from '@/components/Layout';
 // Order Summary Component
 const OrderSummary = ({ items }) => {
+  const [promoCode, setPromoCode] = useState('');
+  const [appliedPromo, setAppliedPromo] = useState(null);
+  const [promoError, setPromoError] = useState('');
+
+  // Available promo codes
+  const promoCodes = {
+    'WELCOME10': { discount: 0.10, type: 'percentage', description: '10% off your order' },
+    'SAVE20': { discount: 0.20, type: 'percentage', description: '20% off your order' },
+    'FREESHIP': { discount: 5.99, type: 'shipping', description: 'Free shipping' },
+    'NEWUSER': { discount: 15, type: 'fixed', description: '$15 off your order' },
+    'STUDENT': { discount: 0.15, type: 'percentage', description: '15% student discount' }
+  };
+
   const subtotal = items.reduce((acc, item) => {
     const price = item.product?.price || item.price || 0;
     const quantity = item.quantity || 1;
     return acc + (price * quantity);
   }, 0);
-  const salesTax = subtotal * 0.13;
-  const shipping = subtotal > 0 ? 5.99 : 0;
-  const total = subtotal + salesTax + shipping;
+
+  // Calculate discount
+  let discount = 0;
+  if (appliedPromo) {
+    const promo = promoCodes[appliedPromo];
+    if (promo.type === 'percentage') {
+      discount = subtotal * promo.discount;
+    } else if (promo.type === 'fixed') {
+      discount = Math.min(promo.discount, subtotal); // Don't exceed subtotal
+    } else if (promo.type === 'shipping') {
+      discount = 0; // Handled separately for shipping
+    }
+  }
+
+  const discountedSubtotal = subtotal - discount;
+  const salesTax = discountedSubtotal * 0.13;
+  const shipping = subtotal > 0 ? (appliedPromo && promoCodes[appliedPromo]?.type === 'shipping' ? 0 : 5.99) : 0;
+  const total = discountedSubtotal + salesTax + shipping;
+
+  const handleApplyPromo = () => {
+    setPromoError('');
+    const upperPromo = promoCode.toUpperCase().trim();
+    
+    if (!upperPromo) {
+      setPromoError('Please enter a promo code');
+      return;
+    }
+
+    if (promoCodes[upperPromo]) {
+      setAppliedPromo(upperPromo);
+      setPromoCode('');
+      setPromoError('');
+    } else {
+      setPromoError('Invalid promo code');
+    }
+  };
+
+  const handleRemovePromo = () => {
+    setAppliedPromo(null);
+    setPromoCode('');
+    setPromoError('');
+  };
 
   return (
 
-    <div className="bg-gray-50 p-6 rounded-lg">
-      <h2 className="text-lg font-semibold mb-4">Order Summary</h2>
+    <div className="bg-gray-50 p-6 rounded-lg h-[100vh] overflow-y-auto max-h-[100vh] ">
+      <h2 className="text-lg font-semibold mt-18 mb-4">Order Summary</h2>
       <div className="space-y-3 text-sm">
         <div className="flex justify-between">
           <span>Sub total ({items.length}):</span>
           <span>${subtotal.toFixed(2)}</span>
         </div>
+        
+        {/* Show discount if applied */}
+        {appliedPromo && discount > 0 && (
+          <div className="flex justify-between text-green-600">
+            <span>Discount ({promoCodes[appliedPromo].description}):</span>
+            <span>-${discount.toFixed(2)}</span>
+          </div>
+        )}
+        
         <div className="flex justify-between">
-          <span>Sales Tax</span>
+          <span>Sales Tax (13%):</span>
           <span>${salesTax.toFixed(2)}</span>
         </div>
         <div className="flex justify-between">
-          <span>Shipping</span>
-          <span>${shipping.toFixed(2)}</span>
+          <span>Shipping:</span>
+          <span>{shipping === 0 ? 'FREE' : `$${shipping.toFixed(2)}`}</span>
         </div>
         <hr className="my-3" />
         <div className="flex justify-between font-semibold text-base">
-          <span>Estimated Total</span>
+          <span>Estimated Total:</span>
           <span>${total.toFixed(2)}</span>
         </div>
       </div>
       
       <div className="mt-6">
         <h3 className="font-medium mb-3">Apply Promo Code</h3>
-        <div className="flex">
-          <input 
-            type="text" 
-            placeholder="" 
-            className="flex-1 px-3 py-2 border border-gray-300 rounded-l-md text-sm focus:outline-none focus:ring-1 focus:ring-[#56193f]" 
-          />
-          <button className="bg-[#56193f] text-white px-4 py-2 rounded-r-md text-sm hover:bg-[#3d1230]">
-            Apply
-          </button>
-        </div>
+        
+        {/* Show applied promo code */}
+        {appliedPromo && (
+          <div className="mb-3 p-3 bg-green-50 border border-green-200 rounded-md">
+            <div className="flex justify-between items-center">
+              <div>
+                <span className="text-green-700 font-medium">{appliedPromo}</span>
+                <p className="text-xs text-green-600">{promoCodes[appliedPromo].description}</p>
+              </div>
+              <button 
+                onClick={handleRemovePromo}
+                className="text-red-500 hover:text-red-700 text-sm"
+              >
+                Remove
+              </button>
+            </div>
+          </div>
+        )}
+        
+        {!appliedPromo && (
+          <div>
+            <div className="flex">
+              <input 
+                type="text" 
+                value={promoCode}
+                onChange={(e) => setPromoCode(e.target.value)}
+                placeholder="Enter promo code" 
+                className="flex-1 px-3 py-2 border border-gray-300 rounded-l-md text-sm focus:outline-none focus:ring-1 focus:ring-[#56193f]" 
+                onKeyPress={(e) => e.key === 'Enter' && handleApplyPromo()}
+              />
+              <button 
+                onClick={handleApplyPromo}
+                className="bg-[#56193f] text-white px-4 py-2 rounded-r-md text-sm hover:bg-[#3d1230]"
+              >
+                Apply
+              </button>
+            </div>
+            {promoError && (
+              <p className="text-red-500 text-xs mt-1">{promoError}</p>
+            )}
+            
+            {/* Available promo codes hint */}
+            <div className="mt-2 text-xs text-gray-500">
+              <p>Try: WELCOME10, SAVE20, FREESHIP, NEWUSER, STUDENT</p>
+            </div>
+          </div>
+        )}
       </div>
       
       <div className="mt-6 space-y-3">
-        <button 
-          onClick={() => alert('Checkout functionality coming soon!')}
-          className="w-full bg-[#56193f] text-white py-3 rounded-md font-medium hover:bg-[#3d1230]"
-        >
-          Checkout
-        </button>
+        <Link href="/checkout" className="block">
+          <button className="w-full bg-[#56193f] text-white py-3 rounded-md font-medium hover:bg-[#3d1230]">
+            Checkout
+          </button>
+        </Link>
         <Link href="/" className="block">
           <button className="w-full bg-white border-2 border-[#56193f] text-[#56193f] py-3 rounded-md font-medium hover:bg-gray-50">
             Continue Shopping
@@ -154,7 +252,7 @@ export default function CartPage() {
 
   return (
     <Layout type="nobottom">
-    <div className="container mx-auto mt-23 px-4 py-8">
+    <div className="container max-w-[1440px] mx-auto mt-23 px-4 py-8">
       {/* Header Navigation */}
       {/* <div className="flex items-center gap-8 text-sm text-gray-600 mb-8 border-b border-gray-200 pb-4">
         <Link href="/" className="text-black border-b-2 border-black pb-2">HOME</Link>

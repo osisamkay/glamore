@@ -4,6 +4,8 @@ import { createContext, useContext, useState, useEffect } from 'react';
 
 const CartContext = createContext();
 
+export { CartContext };
+
 export function useCart() {
   return useContext(CartContext);
 }
@@ -105,11 +107,29 @@ export function CartProvider({ children }) {
     }
   };
 
+  const clearCart = async () => {
+    try {
+      const response = await fetch('/api/cart', {
+        method: 'DELETE',
+      });
+      if (response.ok) {
+        setCartItems([]);
+        return true;
+      }
+      return false;
+    } catch (error) {
+      console.error('Error clearing cart:', error);
+      return false;
+    }
+  };
+
   const value = {
     cartItems,
+    items: cartItems, // Add alias for checkout page
     addToCart,
     removeFromCart,
     updateCartItemQuantity,
+    clearCart,
     loading,
     refreshCart: fetchCartItems,
   };

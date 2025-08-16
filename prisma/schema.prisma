@@ -60,3 +60,55 @@ model CartItem {
   @@unique([productId, size, color, userId])
   @@unique([productId, size, color, sessionId])
 }
+
+model Order {
+  id           String      @id @default(cuid())
+  firstName    String
+  lastName     String
+  email        String
+  phone        String
+  address      String
+  city         String
+  province     String
+  zipCode      String
+  deliveryType String      @default("normal")
+  paymentMethod String     @default("card")
+  giftCardCode String?
+  giftCardAmount Float?    @default(0)
+  subtotal     Float
+  salesTax     Float
+  shipping     Float
+  total        Float
+  status       String      @default("pending")
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+  
+  // Relations
+  items        OrderItem[]
+}
+
+model OrderItem {
+  id        String   @id @default(cuid())
+  orderId   String
+  productId String
+  name      String
+  price     Float
+  quantity  Int
+  color     String
+  size      String
+  image     String
+  createdAt DateTime @default(now())
+  
+  // Relations
+  order     Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+}
+
+model GiftCard {
+  id        String   @id @default(cuid())
+  code      String   @unique
+  balance   Float
+  isActive  Boolean  @default(true)
+  expiresAt DateTime?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
