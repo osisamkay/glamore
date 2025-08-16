@@ -7,30 +7,40 @@ export async function POST(request) {
   try {
     const orderData = await request.json();
     
+    console.log('Received order data:', JSON.stringify(orderData, null, 2));
+    
+    // Validate required fields
+    if (!orderData.shipping || !orderData.payment || !orderData.items || !orderData.totals) {
+      return NextResponse.json(
+        { success: false, error: 'Missing required order data' },
+        { status: 400 }
+      );
+    }
+    
     // Create order in database
     const order = await prisma.order.create({
       data: {
         // Shipping information
-        firstName: orderData.shipping.firstName,
-        lastName: orderData.shipping.lastName,
-        email: orderData.shipping.email,
-        phone: orderData.shipping.phone,
-        address: orderData.shipping.address,
-        city: orderData.shipping.city,
-        province: orderData.shipping.province,
-        zipCode: orderData.shipping.zipCode,
-        deliveryType: orderData.shipping.deliveryType,
+        firstName: orderData.shipping.firstName || '',
+        lastName: orderData.shipping.lastName || '',
+        email: orderData.shipping.email || '',
+        phone: orderData.shipping.phone || '',
+        address: orderData.shipping.address || '',
+        city: orderData.shipping.city || '',
+        province: orderData.shipping.province || '',
+        zipCode: orderData.shipping.zipCode || '',
+        deliveryType: orderData.shipping.deliveryType || 'normal',
         
         // Payment information
-        paymentMethod: orderData.payment.method,
+        paymentMethod: orderData.payment.method || 'card',
         giftCardCode: orderData.payment.giftCardCode || null,
         giftCardAmount: orderData.payment.giftCardAmount || 0,
         
         // Order totals
-        subtotal: orderData.totals.subtotal,
-        salesTax: orderData.totals.salesTax,
-        shipping: orderData.totals.shipping,
-        total: orderData.totals.total,
+        subtotal: parseFloat(orderData.totals.subtotal) || 0,
+        salesTax: parseFloat(orderData.totals.salesTax) || 0,
+        shipping: parseFloat(orderData.totals.shipping) || 0,
+        total: parseFloat(orderData.totals.total) || 0,
         
         // Order status
         status: 'pending',
@@ -38,13 +48,13 @@ export async function POST(request) {
         // Create order items
         items: {
           create: orderData.items.map(item => ({
-            productId: item.productId,
-            name: item.name,
-            price: item.price,
-            quantity: item.quantity,
-            color: item.color,
-            size: item.size,
-            image: item.image
+            productId: item.productId || '',
+            name: item.name || '',
+            price: parseFloat(item.price) || 0,
+            quantity: parseInt(item.quantity) || 1,
+            color: item.color || '',
+            size: item.size || '',
+            image: item.image || ''
           }))
         }
       },
