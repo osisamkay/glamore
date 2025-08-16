@@ -6,7 +6,7 @@ import jwt from 'jsonwebtoken';
 // GET - Fetch cart items for authenticated user
 export async function GET() {
   try {
-    const cookieStore = cookies();
+    const cookieStore = await cookies();
     const token = cookieStore.get('token')?.value;
 
     if (!token) {
@@ -34,7 +34,7 @@ export async function GET() {
 // POST - Add item to cart
 export async function POST(request) {
   try {
-    const cookieStore = cookies();
+    const cookieStore = await cookies();
     const token = cookieStore.get('token')?.value;
 
     if (!token) {
@@ -44,13 +44,19 @@ export async function POST(request) {
     const decoded = jwt.verify(token, process.env.JWT_SECRET || 'your-secret-key');
     const userId = decoded.userId;
 
-    const { productId, size, color, quantity = 1 } = await request.json();
+    const { productId, size, color, quantity = 1, bespoke, customMeasurements } = await request.json();
 
-    console.log('Cart API - Received data:', { productId, size, color, quantity });
+    console.log('Cart API - Received data:', { productId, size, color, quantity, bespoke, customMeasurements });
 
-    if (!productId || !size || !color) {
-      console.log('Cart API - Missing required fields:', { productId: !!productId, size: !!size, color: !!color });
+    if (!productId || !color) {
+      console.log('Cart API - Missing required fields:', { productId: !!productId, color: !!color });
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
+    }
+
+    // For bespoke items, size is optional (will be "Custom")
+    if (!bespoke && !size) {
+      console.log('Cart API - Size required for non-bespoke items');
+      return NextResponse.json({ error: 'Size is required for regular items' }, { status: 400 });
     }
 
     // Check if product exists and has enough stock
@@ -86,14 +92,22 @@ export async function POST(request) {
       return NextResponse.json(updatedItem);
     } else {
       // Create new cart item
+      const cartItemData = {
+        userId,
+        productId,
+        size: size || 'Custom',
+        color,
+        quantity
+      };
+
+      // Add bespoke data if present
+      if (bespoke) {
+        cartItemData.bespoke = true;
+        cartItemData.customMeasurements = JSON.stringify(customMeasurements);
+      }
+
       const newCartItem = await prisma.cartItem.create({
-        data: {
-          userId,
-          productId,
-          size,
-          color,
-          quantity
-        },
+        data: cartItemData,
         include: { product: true }
       });
       return NextResponse.json(newCartItem);
@@ -107,7 +121,7 @@ export async function POST(request) {
 // PUT - Update cart item quantity
 export async function PUT(request) {
   try {
-    const cookieStore = cookies();
+    const cookieStore = await cookies();
     const token = cookieStore.get('token')?.value;
 
     if (!token) {
@@ -157,7 +171,7 @@ export async function PUT(request) {
 // DELETE - Remove item from cart or clear entire cart
 export async function DELETE(request) {
   try {
-    const cookieStore = cookies();
+    const cookieStore = await cookies();
     const token = cookieStore.get('token')?.value;
 
     if (!token) {

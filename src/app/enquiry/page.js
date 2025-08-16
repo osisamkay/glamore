@@ -64,7 +64,7 @@ export default function EnquiryPage() {
   if (submitted) {
     return (
       <Layout>
-        <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4">
+        <div className="min-h-screen mt-43 bg-gray-50 flex items-center justify-center px-4">
           <div className="max-w-md w-full text-center bg-white rounded-lg shadow-sm border border-gray-200 p-8">
             <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
               <svg className="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -89,7 +89,7 @@ export default function EnquiryPage() {
 
   return (
     <Layout>
-      <div className="min-h-screen bg-gray-50 py-12">
+      <div className="min-h-screen mt-43 bg-gray-50 py-12">
         <div className="max-w-2xl mx-auto px-4">
           <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-8">
             <h1 className="text-3xl font-bold text-center text-gray-900 mb-8">Make Enquiry</h1>

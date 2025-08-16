@@ -3,11 +3,14 @@
 import Image from 'next/image';
 import Link from 'next/link';
 
-export default function CategoryCard({ category }) {
+export default function CategoryCard({ category, bespoke = false }) {
   const { id, name, image, url } = category;
 
+  // Use bespoke route if bespoke is true, otherwise use regular URL
+  const finalUrl = bespoke ? url.replace('/women', '/bespoke').replace('/men', '/bespoke').replace('/kids', '/bespoke') : url;
+
   return (
-    <Link href={url} className="block group">
+    <Link href={finalUrl} className="block group">
       <h3 className="text-base font-medium mb-4">{name}</h3>
       <div className="aspect-[3/4] w-full max-w-[400px] mx-auto h-[328px] relative overflow-hidden rounded-2xl">
         <Image 

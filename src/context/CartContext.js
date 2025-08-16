@@ -35,17 +35,25 @@ export function CartProvider({ children }) {
 
   const addToCart = async (item) => {
     try {
+      const cartData = {
+        productId: item.id || item.productId,
+        size: item.size,
+        color: item.color,
+        quantity: item.quantity || 1
+      };
+
+      // Add bespoke data if present
+      if (item.bespoke) {
+        cartData.bespoke = true;
+        cartData.customMeasurements = item.customMeasurements;
+      }
+
       const response = await fetch('/api/cart', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          productId: item.id || item.productId,
-          size: item.size,
-          color: item.color,
-          quantity: item.quantity || 1
-        }),
+        body: JSON.stringify(cartData),
       });
 
       if (response.ok) {
@@ -53,7 +61,8 @@ export function CartProvider({ children }) {
         await fetchCartItems();
         return true;
       } else {
-        console.error('Failed to add item to cart');
+        const errorData = await response.json();
+        console.error('Failed to add item to cart:', errorData.error || 'Unknown error');
         return false;
       }
     } catch (error) {

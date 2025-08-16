@@ -3,7 +3,7 @@ import { prisma } from '@/lib/db';
 
 export async function GET(request, { params }) {
   try {
-    const { id } = params;
+    const { id } = await params;
 
     if (!id || typeof id !== 'string') {
       return NextResponse.json({ error: 'Invalid product ID' }, { status: 400 });

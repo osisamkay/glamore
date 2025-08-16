@@ -4,8 +4,9 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useCart } from '@/context/CartContext';
 import { useAuth } from '@/context/AuthContext';
+import CustomMeasurementModal from './CustomMeasurementModal';
 
-export default function ProductInfo({ product, onShowSizeGuide }) {
+export default function ProductInfo({ product, onShowSizeGuide, bespoke = false }) {
 
   // Handle colors and sizes that may be arrays or comma-separated strings
   const availableColors = Array.isArray(product.colors) 
@@ -19,15 +20,29 @@ export default function ProductInfo({ product, onShowSizeGuide }) {
   const [selectedSize, setSelectedSize] = useState(availableSizes[0] || '');
   const [quantity, setQuantity] = useState(1);
   const [isAddingToCart, setIsAddingToCart] = useState(false);
+  const [showMeasurementModal, setShowMeasurementModal] = useState(false);
+  const [customMeasurements, setCustomMeasurements] = useState(null);
   
   const { addToCart } = useCart();
   const { isAuthenticated } = useAuth();
   const router = useRouter();
 
+  const handleSaveMeasurements = (measurements) => {
+    setCustomMeasurements(measurements);
+    console.log('Custom measurements saved:', measurements);
+  };
+
   const handleAddToCart = async () => {
     // Check if user is authenticated
     if (!isAuthenticated) {
       router.push('/login');
+      return;
+    }
+
+    // For bespoke items, check if measurements are provided
+    if (bespoke && !customMeasurements) {
+      alert('Please provide custom measurements for this bespoke item.');
+      setShowMeasurementModal(true);
       return;
     }
 
@@ -39,8 +54,10 @@ export default function ProductInfo({ product, onShowSizeGuide }) {
       image: product.image,
       price: product.price,
       color: selectedColor || "Purple",
-      size: selectedSize,
+      size: bespoke ? 'Custom' : selectedSize,
       quantity: quantity,
+      bespoke: bespoke,
+      customMeasurements: bespoke ? customMeasurements : null,
     };
 
     const success = await addToCart(itemToAdd);
@@ -145,7 +162,7 @@ export default function ProductInfo({ product, onShowSizeGuide }) {
       </div>
 
       {/* Size Selection */}
-      {availableSizes.length > 0 && (
+      {!bespoke && availableSizes.length > 0 && (
         <div>
          
           <div className="flex items-center justify-between mb-3">
@@ -167,6 +184,49 @@ export default function ProductInfo({ product, onShowSizeGuide }) {
               </button>
             ))}
           </div>
+        </div>
+      )}
+
+      {/* Custom Size for Bespoke */}
+      {bespoke && (
+        <div>
+          <div className="flex items-center justify-between mb-3">
+            <span className="text-sm font-medium text-gray-900">Size: Custom Tailored</span>
+          </div>
+          <div className="flex gap-3">
+            <button
+              onClick={() => setShowMeasurementModal(true)}
+              className={`py-3 px-6 text-sm font-medium border rounded-lg transition-colors ${
+                customMeasurements
+                  ? 'border-green-500 bg-green-50 text-green-700'
+                  : 'border-[#56193f] bg-[#56193f] text-white hover:bg-[#56193f]/90'
+              }`}
+            >
+              {customMeasurements ? (
+                <div className="flex items-center gap-2">
+                  <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                  </svg>
+                  Measurements Saved
+                </div>
+              ) : (
+                'Provide Custom Measurements'
+              )}
+            </button>
+            {customMeasurements && (
+              <button
+                onClick={() => setShowMeasurementModal(true)}
+                className="py-3 px-4 text-sm font-medium border border-gray-300 text-gray-700 rounded-lg hover:border-gray-400 transition-colors"
+              >
+                Edit
+              </button>
+            )}
+          </div>
+          {customMeasurements && (
+            <div className="mt-2 text-xs text-green-600">
+              Custom measurements provided for {customMeasurements.productName}
+            </div>
+          )}
         </div>
       )}
       <div className="flex items-center justify-between mb-3">
@@ -204,7 +264,7 @@ export default function ProductInfo({ product, onShowSizeGuide }) {
       <div className="flex flex-1 items-center gap-3">
         <button
           onClick={handleAddToCart}
-          disabled={isAddingToCart || !selectedSize || product.quantity === 0}
+          disabled={isAddingToCart || (!bespoke && !selectedSize) || product.quantity === 0}
           className="flex-1 bg-[#56193f] w-full max-w-[148px] text-white py-3 px-6 rounded font-medium hover:bg-[#56193f]/90 focus:outline-none focus:ring-2 focus:ring-[#56193f] focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {product.quantity === 0 ? 'Out of Stock' : 
@@ -239,6 +299,14 @@ export default function ProductInfo({ product, onShowSizeGuide }) {
           <li><strong>Stock Status:</strong> {product.quantity} items remaining</li>
         </ul>
       </div> */}
+
+      {/* Custom Measurement Modal */}
+      <CustomMeasurementModal
+        isOpen={showMeasurementModal}
+        onClose={() => setShowMeasurementModal(false)}
+        productName={product.name}
+        onSaveMeasurements={handleSaveMeasurements}
+      />
     </div>
   );
 }

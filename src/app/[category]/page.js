@@ -21,7 +21,7 @@ async function getCategoryProducts(category) {
 }
 
 export default async function CategoryPage({ params }) {
-  const { category } = params;
+  const { category } = await params;
   const products = await getCategoryProducts(category);
 
   // A simple safeguard against invalid categories

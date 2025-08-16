@@ -3,7 +3,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 
-export default function ProductCard({ product }) {
+export default function ProductCard({ product, bespoke = false }) {
   // Safeguard against missing product or price
   if (!product || typeof product.price !== 'number' || !product.id || !product.image) {
     // Returning null will prevent rendering of this card if data is incomplete
@@ -12,8 +12,11 @@ export default function ProductCard({ product }) {
 
   const { id, name, price, image } = product;
 
+  // Use bespoke route if bespoke is true, otherwise use regular product URL
+  const productUrl = bespoke ? `/bespoke/${id}` : `/product/${id}`;
+
   return (
-    <Link href={`/product/${id}`} className="block group">
+    <Link href={productUrl} className="block group">
       <div className="bg-gray-50 p-4 rounded-xl transition-shadow duration-300 group-hover:shadow-md">
         <div className="aspect-[3/4] w-full relative overflow-hidden rounded-lg mb-3">
           <Image 

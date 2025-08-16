@@ -1,5 +1,5 @@
 import Layout from '../../../components/Layout';
-import ProductDetailClientPage from '../../../components/ProductDetailClientPage';
+import BespokeProductDetailClientPage from '../../../components/BespokeProductDetailClientPage';
 
 // Fetch product data from API
 async function getProduct(id) {
@@ -20,17 +20,16 @@ async function getProduct(id) {
   }
 }
 
-export default async function ProductPage({ params, searchParams }) {
+export default async function BespokeProductPage({ params }) {
   const { id } = await params;
-  const { bespoke } = (await searchParams) || {};
   const product = await getProduct(id);
 
   if (!product) {
     return (
       <Layout>
         <div className="container mx-auto px-4 py-8 text-center">
-          <h1 className="text-2xl font-bold">Product not found</h1>
-          <p>Sorry, we couldn't find the product you're looking for.</p>
+          <h1 className="text-2xl font-bold">Bespoke Product not found</h1>
+          <p>Sorry, we couldn't find the bespoke product you're looking for.</p>
         </div>
       </Layout>
     );
@@ -39,7 +38,7 @@ export default async function ProductPage({ params, searchParams }) {
   return (
     <Layout>
       <div className="container max-w-6xl mx-auto px-4 py-8">
-        <ProductDetailClientPage product={product} bespoke={bespoke === 'true'} />
+        <BespokeProductDetailClientPage product={product} />
       </div>
     </Layout>
   );
