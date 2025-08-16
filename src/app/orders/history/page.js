@@ -1,18 +1,15 @@
 "use client";
 
-import { useAuth } from '../../context/AuthContext';
+import { useAuth } from '../../../context/AuthContext';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import AccountSidebar from '../../components/AccountSidebar';
-import CancelOrderModal from '../../components/CancelOrderModal';
+import AccountSidebar from '../../../components/AccountSidebar';
 
-export default function OrdersPage() {
+export default function OrderHistoryPage() {
   const { user, isAuthenticated, loading } = useAuth();
   const router = useRouter();
   const [orders, setOrders] = useState([]);
   const [loadingOrders, setLoadingOrders] = useState(true);
-  const [cancelModalOpen, setCancelModalOpen] = useState(false);
-  const [selectedOrderId, setSelectedOrderId] = useState(null);
 
   useEffect(() => {
     if (!loading && !isAuthenticated) {
@@ -22,55 +19,54 @@ export default function OrdersPage() {
 
   useEffect(() => {
     if (isAuthenticated) {
-      fetchOrders();
+      fetchOrderHistory();
     }
   }, [isAuthenticated]);
 
-  const fetchOrders = async () => {
+  const fetchOrderHistory = async () => {
     try {
-      const response = await fetch('/api/orders');
+      const response = await fetch('/api/orders/history');
       if (response.ok) {
         const data = await response.json();
         setOrders(data.orders || []);
       }
     } catch (error) {
-      console.error('Error fetching orders:', error);
+      console.error('Error fetching order history:', error);
     } finally {
       setLoadingOrders(false);
     }
   };
 
-  const handleReorder = (orderId) => {
-    // TODO: Implement reorder functionality
-    console.log('Reorder:', orderId);
-  };
-
-  const handleCancelOrder = (orderId) => {
-    setSelectedOrderId(orderId);
-    setCancelModalOpen(true);
-  };
-
-  const confirmCancelOrder = async (orderId, reason) => {
+  const handleReorder = async (orderId) => {
     try {
-      const response = await fetch(`/api/orders/${orderId}/cancel`, {
+      const response = await fetch(`/api/orders/${orderId}/reorder`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ reason }),
       });
 
       if (response.ok) {
-        // Refresh orders list
-        await fetchOrders();
-        alert('Order cancelled successfully');
+        const data = await response.json();
+        alert('Items added to cart successfully!');
+        router.push('/cart');
       } else {
-        throw new Error('Failed to cancel order');
+        throw new Error('Failed to reorder');
       }
     } catch (error) {
-      console.error('Error cancelling order:', error);
-      throw error;
+      console.error('Error reordering:', error);
+      alert('Failed to reorder. Please try again.');
     }
+  };
+
+  const handleReview = (orderId) => {
+    // TODO: Implement review functionality
+    router.push(`/orders/${orderId}/review`);
+  };
+
+  const handleReturn = (orderId) => {
+    // TODO: Implement return functionality
+    router.push(`/orders/${orderId}/return`);
   };
 
   if (loading) {
@@ -94,16 +90,16 @@ export default function OrdersPage() {
         {/* Main Content */}
         <div className="flex-1 p-8">
           <div className="max-w-4xl">
-            <h1 className="text-2xl font-semibold text-gray-900 mb-8">Pending Orders</h1>
+            <h1 className="text-2xl font-semibold text-gray-900 mb-8">Order History</h1>
 
             {loadingOrders ? (
               <div className="text-center py-8">
-                <div className="text-lg text-gray-600">Loading orders...</div>
+                <div className="text-lg text-gray-600">Loading order history...</div>
               </div>
             ) : orders.length === 0 ? (
               <div className="text-center py-12">
-                <div className="text-gray-500 text-lg mb-4">No pending orders found</div>
-                <p className="text-gray-400">Your pending orders will appear here</p>
+                <div className="text-gray-500 text-lg mb-4">No order history found</div>
+                <p className="text-gray-400">Your completed orders will appear here</p>
               </div>
             ) : (
               <div className="space-y-6">
@@ -111,17 +107,26 @@ export default function OrdersPage() {
                   <div key={order.id} className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
                     <div className="flex items-start justify-between mb-4">
                       <div>
-                        <h3 className="text-lg font-medium text-gray-900">Order #{order.id}</h3>
+                        <h3 className="text-lg font-medium text-gray-900">Order #{order.id.slice(-8).toUpperCase()}</h3>
                         <p className="text-sm text-gray-500">
                           Placed on {new Date(order.createdAt).toLocaleDateString()}
+                        </p>
+                        <p className="text-sm text-gray-500">
+                          Delivered on {order.deliveredAt ? new Date(order.deliveredAt).toLocaleDateString() : 'N/A'}
                         </p>
                       </div>
                       <div className="text-right">
                         <div className="text-lg font-semibold text-gray-900">
                           ${order.total?.toFixed(2) || '0.00'}
                         </div>
-                        <div className="text-sm text-orange-600 font-medium">
-                          {order.status || 'Pending'}
+                        <div className={`text-sm font-medium ${
+                          order.status === 'delivered' ? 'text-green-600' : 
+                          order.status === 'cancelled' ? 'text-red-600' : 
+                          'text-blue-600'
+                        }`}>
+                          {order.status === 'delivered' ? 'Delivered' : 
+                           order.status === 'cancelled' ? 'Cancelled' :
+                           order.status?.charAt(0).toUpperCase() + order.status?.slice(1) || 'Completed'}
                         </div>
                       </div>
                     </div>
@@ -153,11 +158,11 @@ export default function OrdersPage() {
                               <div>Quantity: {item.quantity}</div>
                             </div>
                           </div>
-                          {/* <div className="text-right">
+                          <div className="text-right">
                             <div className="font-semibold text-gray-900">
                               ${(item.price * item.quantity).toFixed(2)}
                             </div>
-                          </div> */}
+                          </div>
                         </div>
                       )) || (
                         <div className="text-gray-500">No items found</div>
@@ -168,15 +173,33 @@ export default function OrdersPage() {
                     <div className="flex justify-end space-x-3 mt-6 pt-4 border-t border-gray-200">
                       <button
                         onClick={() => handleReorder(order.id)}
-                        className="px-4 py-2 text-sm text-gray-600 hover:text-gray-900 transition-colors"
+                        className="px-4 py-2 text-sm bg-[#56193F] text-white rounded-md hover:bg-[#441530] transition-colors"
                       >
                         Reorder
                       </button>
+                      
+                      {order.status === 'delivered' && (
+                        <>
+                          <button
+                            onClick={() => handleReview(order.id)}
+                            className="px-4 py-2 text-sm text-gray-600 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors"
+                          >
+                            Write Review
+                          </button>
+                          <button
+                            onClick={() => handleReturn(order.id)}
+                            className="px-4 py-2 text-sm text-gray-600 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors"
+                          >
+                            Return Items
+                          </button>
+                        </>
+                      )}
+                      
                       <button
-                        onClick={() => handleCancelOrder(order.id)}
+                        onClick={() => router.push(`/orders/${order.id}`)}
                         className="px-4 py-2 text-sm text-gray-600 hover:text-gray-900 transition-colors"
                       >
-                        Cancel Order
+                        View Details
                       </button>
                     </div>
                   </div>
@@ -186,14 +209,6 @@ export default function OrdersPage() {
           </div>
         </div>
       </div>
-
-      {/* Cancel Order Modal */}
-      <CancelOrderModal
-        isOpen={cancelModalOpen}
-        onClose={() => setCancelModalOpen(false)}
-        orderId={selectedOrderId}
-        onConfirm={confirmCancelOrder}
-      />
     </div>
   );
 }
