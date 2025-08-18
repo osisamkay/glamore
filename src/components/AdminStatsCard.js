@@ -26,19 +26,21 @@ export default function AdminStatsCard({ title, value, change, changeType, icon,
   };
 
   return (
-    <div className={`p-6 rounded-lg border ${getColorClasses(color)} hover:shadow-md transition-shadow`}>
-      <div className="flex items-center justify-between">
+    <div className={`p-6 rounded-lg border  ${getColorClasses(color)} hover:shadow-md transition-shadow`}>
+      <div className="">
         <div>
-          <p className="text-sm font-medium text-gray-600 mb-1">{title}</p>
-          <p className="text-2xl font-bold text-gray-900">{value}</p>
-          <div className="flex items-center mt-2">
+          <div className="flex items-center mb-4   space-x-2">
+        <div className="text-xl">{icon}</div>
+          <p className="text-xl font-medium text-gray-600 mb-1">{title}</p>
+          </div>
+          <p className="text-2xl mb-4 font-bold text-gray-900">{value}</p>
+          <div className="flex flex-1 items-center w-full justify-between mt-2">
             <span className={`text-sm ${getChangeColor(changeType)}`}>
               {changeType === 'positive' ? '↗' : changeType === 'negative' ? '↘' : '→'} {change}
             </span>
             <span className="text-xs text-gray-500 ml-2">vs last week</span>
           </div>
         </div>
-        <div className="text-2xl">{icon}</div>
       </div>
     </div>
   );

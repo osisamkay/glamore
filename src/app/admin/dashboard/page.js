@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import AdminSidebar from '@/components/AdminSidebar';
@@ -11,10 +11,24 @@ import AdminTopCategories from '@/components/AdminTopCategories';
 export default function AdminDashboard() {
   const { user, loading } = useAuth();
   const router = useRouter();
+  const [stats, setStats] = useState({ totalSales: 0, visitors: 0, refunds: 0 });
 
   useEffect(() => {
     if (!loading && (!user || user.role !== 'admin')) {
       router.push('/admin/login');
+    } else if (user) {
+      const fetchStats = async () => {
+        try {
+          const response = await fetch('/api/admin/stats');
+          if (response.ok) {
+            const data = await response.json();
+            setStats(data);
+          }
+        } catch (error) {
+          console.error('Failed to fetch stats:', error);
+        }
+      };
+      fetchStats();
     }
   }, [user, loading, router]);
 
@@ -31,12 +45,12 @@ export default function AdminDashboard() {
   }
 
   return (
-    <div className="flex min-h-screen bg-gray-50">
+    <div className="flex  min-h-screen bg-gray-50">
       {/* Sidebar */}
       <AdminSidebar />
 
       {/* Main Content */}
-      <div className="flex-1 p-8">
+      <div className="flex-1 w-full max-w-[1440px] mx-auto p-8">
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
           <div>
@@ -83,24 +97,24 @@ export default function AdminDashboard() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
           <AdminStatsCard
             title="Total Sales"
-            value="$158,685.78"
-            change="+2%"
+            value={`$${stats.totalSales.toLocaleString()}`}
+            change="+2%" // Note: Change calculation is not implemented in the backend yet
             changeType="positive"
             icon="💰"
             color="purple"
           />
           <AdminStatsCard
             title="Visitors"
-            value="8,240"
-            change="+34%"
+            value={stats.visitors.toLocaleString()}
+            change="+34%" // Note: Change calculation is not implemented in the backend yet
             changeType="positive"
             icon="👥"
             color="green"
           />
           <AdminStatsCard
             title="Refunds"
-            value="358"
-            change="-16%"
+            value={stats.refunds.toLocaleString()}
+            change="-16%" // Note: Change calculation is not implemented in the backend yet
             changeType="negative"
             icon="↩️"
             color="red"

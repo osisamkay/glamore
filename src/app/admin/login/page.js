@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useAuth } from '@/context/AuthContext';
+import Image from 'next/image';
 
 export default function AdminLoginPage() {
   const [formData, setFormData] = useState({
@@ -44,12 +45,14 @@ export default function AdminLoginPage() {
       {/* Left Sidebar */}
       <div className="w-80 bg-gradient-to-b from-[#56193F] to-[#2D0A1F] flex flex-col">
         {/* Logo */}
-        <div className="p-8">
-          <h1 className="text-white text-3xl font-bold">GGF</h1>
-        </div>
+        <div className="flex my-16 justify-center">
+            <Link href="/">
+              <Image src="/logo.svg" alt="GlamourGlow Fashion Logo" width={165} height={73} />
+            </Link>
+          </div>
 
         {/* Navigation */}
-        <nav className="flex-1 px-6">
+        <nav className="flex-1  px-6">
           <div className="space-y-2">
             <Link 
               href="/admin/login" 

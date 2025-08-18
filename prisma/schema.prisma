@@ -41,6 +41,7 @@ model User {
   
   // Relations
   cartItems CartItem[]
+  orders    Order[]
 }
 
 model CartItem {
@@ -88,6 +89,8 @@ model Order {
   
   // Relations
   items        OrderItem[]
+  userId       String?
+  user         User?       @relation(fields: [userId], references: [id], onDelete: SetNull)
 }
 
 model OrderItem {

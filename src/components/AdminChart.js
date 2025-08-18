@@ -1,83 +1,88 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 export default function AdminChart() {
   const canvasRef = useRef(null);
+  const [salesData, setSalesData] = useState([]);
 
   useEffect(() => {
+    const fetchSalesData = async () => {
+      try {
+        const res = await fetch('/api/admin/sales-chart');
+        const data = await res.json();
+        if (res.ok) {
+          setSalesData(data);
+        }
+      } catch (error) {
+        console.error('Failed to fetch sales data:', error);
+      }
+    };
+    fetchSalesData();
+  }, []);
+
+  useEffect(() => {
+    if (!salesData || salesData.length === 0) return;
+
     const canvas = canvasRef.current;
     const ctx = canvas.getContext('2d');
-    
-    // Clear canvas
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    
-    // Sample data points for the chart
-    const salesData = [
-      { x: 50, y: 180 }, { x: 100, y: 160 }, { x: 150, y: 140 }, 
-      { x: 200, y: 120 }, { x: 250, y: 100 }, { x: 300, y: 80 },
-      { x: 350, y: 60 }, { x: 400, y: 80 }, { x: 450, y: 100 }
-    ];
-    
-    const earningsData = [
-      { x: 50, y: 200 }, { x: 100, y: 190 }, { x: 150, y: 170 }, 
-      { x: 200, y: 150 }, { x: 250, y: 130 }, { x: 300, y: 110 },
-      { x: 350, y: 90 }, { x: 400, y: 110 }, { x: 450, y: 130 }
-    ];
 
-    // Draw grid lines
+    const padding = 50;
+    const chartWidth = canvas.width - 2 * padding;
+    const chartHeight = canvas.height - 2 * padding;
+
+    const maxSales = Math.max(...salesData.map(d => d.totalSales));
+    const xScale = chartWidth / (salesData.length - 1);
+
+    // Draw grid lines and labels
     ctx.strokeStyle = '#f0f0f0';
     ctx.lineWidth = 1;
-    for (let i = 0; i <= 5; i++) {
-      const y = (canvas.height / 5) * i;
+    ctx.font = '12px Arial';
+    ctx.fillStyle = '#9ca3af';
+
+    const yAxisTicks = 5;
+    for (let i = 0; i <= yAxisTicks; i++) {
+      const y = padding + (chartHeight / yAxisTicks) * i;
+      const value = maxSales - (maxSales / yAxisTicks) * i;
       ctx.beginPath();
-      ctx.moveTo(0, y);
-      ctx.lineTo(canvas.width, y);
+      ctx.moveTo(padding, y);
+      ctx.lineTo(canvas.width - padding, y);
       ctx.stroke();
+      ctx.fillText(`$${(value / 1000).toFixed(1)}k`, 5, y + 4);
     }
 
-    // Draw Sales line (blue)
+    salesData.forEach((dataPoint, i) => {
+      const x = padding + i * xScale;
+      ctx.fillText(dataPoint.month, x - 10, canvas.height - padding + 20);
+    });
+
+    // Draw sales line
     ctx.strokeStyle = '#3b82f6';
     ctx.lineWidth = 2;
     ctx.beginPath();
-    salesData.forEach((point, index) => {
-      if (index === 0) {
-        ctx.moveTo(point.x, point.y);
+    salesData.forEach((dataPoint, i) => {
+      const x = padding + i * xScale;
+      const y = padding + chartHeight - (dataPoint.totalSales / maxSales) * chartHeight;
+      if (i === 0) {
+        ctx.moveTo(x, y);
       } else {
-        ctx.lineTo(point.x, point.y);
-      }
-    });
-    ctx.stroke();
-
-    // Draw Earnings line (green)
-    ctx.strokeStyle = '#10b981';
-    ctx.lineWidth = 2;
-    ctx.beginPath();
-    earningsData.forEach((point, index) => {
-      if (index === 0) {
-        ctx.moveTo(point.x, point.y);
-      } else {
-        ctx.lineTo(point.x, point.y);
+        ctx.lineTo(x, y);
       }
     });
     ctx.stroke();
 
     // Draw data points
-    salesData.forEach(point => {
+    salesData.forEach((dataPoint, i) => {
+      const x = padding + i * xScale;
+      const y = padding + chartHeight - (dataPoint.totalSales / maxSales) * chartHeight;
       ctx.fillStyle = '#3b82f6';
       ctx.beginPath();
-      ctx.arc(point.x, point.y, 3, 0, 2 * Math.PI);
+      ctx.arc(x, y, 4, 0, 2 * Math.PI);
       ctx.fill();
     });
 
-    earningsData.forEach(point => {
-      ctx.fillStyle = '#10b981';
-      ctx.beginPath();
-      ctx.arc(point.x, point.y, 3, 0, 2 * Math.PI);
-      ctx.fill();
-    });
-
-  }, []);
+  }, [salesData]);
 
   return (
     <div className="bg-white p-6 rounded-lg border border-gray-200">
@@ -98,16 +103,12 @@ export default function AdminChart() {
           <div className="w-3 h-3 bg-blue-500 rounded-full mr-2"></div>
           <span className="text-sm text-gray-600">Sales</span>
         </div>
-        <div className="flex items-center">
-          <div className="w-3 h-3 bg-green-500 rounded-full mr-2"></div>
-          <span className="text-sm text-gray-600">Earnings</span>
-        </div>
       </div>
 
       <canvas
         ref={canvasRef}
-        width={500}
-        height={250}
+        width={600}
+        height={300}
         className="w-full h-64"
       />
     </div>
