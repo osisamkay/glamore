@@ -102,8 +102,9 @@ model OrderItem {
   quantity  Int
   color     String
   size      String
-  image     String
-  createdAt DateTime @default(now())
+  image              String
+  customMeasurements String? // JSON string of measurements
+  createdAt          DateTime @default(now())
   
   // Relations
   order     Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)

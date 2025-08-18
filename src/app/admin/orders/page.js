@@ -8,6 +8,7 @@ import { useAuth } from '@/context/AuthContext';
 import { useRouter } from 'next/navigation';
 import AdminSidebar from '@/components/AdminSidebar';
 import TailoredOrdersView from '@/components/TailoredOrdersView';
+import OrderActionsDropdown from '@/components/OrderActionsDropdown';
 
 export default function AdminOrdersPage() {
   const { user, loading } = useAuth();
@@ -166,7 +167,9 @@ export default function AdminOrdersPage() {
                     </td>
                     <td className="py-4">${order.total.toFixed(2)}</td>
                     <td className="py-4">{new Date(order.createdAt).toLocaleDateString()}</td>
-                    <td className="py-4 text-gray-500">...</td>
+                    <td className="py-4">
+                      <OrderActionsDropdown order={order} onUpdateOrder={handleUpdateOrder} />
+                    </td>
                   </tr>
                 ))}
               </tbody>
