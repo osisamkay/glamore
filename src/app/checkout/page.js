@@ -210,7 +210,7 @@ export default function CheckoutPage() {
   if (items.length === 0) {
     return (
       <Layout>
-        <div className="container max-w-[1324px] mx-auto px-4 py-8 text-center">
+        <div className="container mt-43 max-w-[1324px] mx-auto px-4 py-8 text-center">
           <h1 className="text-2xl font-bold mb-4">Your cart is empty</h1>
           <p className="text-gray-600 mb-8">Add some items to your cart before checking out.</p>
           <button 

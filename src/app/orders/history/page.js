@@ -3,6 +3,7 @@
 import { useAuth } from '../../../context/AuthContext';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import Layout from '../../../components/Layout';
 import AccountSidebar from '../../../components/AccountSidebar';
 
 export default function OrderHistoryPage() {
@@ -82,15 +83,16 @@ export default function OrderHistoryPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="flex">
-        {/* Sidebar */}
-        <AccountSidebar />
+    <Layout>
+      <div className="min-h-screen bg-gray-50">
+        <div className="flex">
+          {/* Sidebar */}
+          <AccountSidebar />
 
-        {/* Main Content */}
-        <div className="flex-1 p-8">
-          <div className="max-w-4xl">
-            <h1 className="text-2xl font-semibold text-gray-900 mb-8">Order History</h1>
+          {/* Main Content */}
+          <div className="flex-1 p-8">
+            <div className="max-w-4xl">
+              <h1 className="text-2xl font-semibold text-gray-900 mb-8">Order History</h1>
 
             {loadingOrders ? (
               <div className="text-center py-8">
@@ -206,9 +208,10 @@ export default function OrderHistoryPage() {
                 ))}
               </div>
             )}
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    </Layout>
   );
 }

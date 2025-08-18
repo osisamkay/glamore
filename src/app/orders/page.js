@@ -3,8 +3,10 @@
 import { useAuth } from '../../context/AuthContext';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import Layout from '../../components/Layout';
 import AccountSidebar from '../../components/AccountSidebar';
 import CancelOrderModal from '../../components/CancelOrderModal';
+import BespokeOrderTracking from '../../components/BespokeOrderTracking';
 
 export default function OrdersPage() {
   const { user, isAuthenticated, loading } = useAuth();
@@ -86,15 +88,16 @@ export default function OrdersPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="flex">
-        {/* Sidebar */}
-        <AccountSidebar />
+    <Layout>
+      <div className="min-h-screen mt-43 bg-gray-50">
+        <div className="flex">
+          {/* Sidebar */}
+          <AccountSidebar />
 
-        {/* Main Content */}
-        <div className="flex-1 p-8">
-          <div className="max-w-4xl">
-            <h1 className="text-2xl font-semibold text-gray-900 mb-8">Pending Orders</h1>
+          {/* Main Content */}
+          <div className="flex-1 p-8">
+            <div className="max-w-4xl">
+              <h1 className="text-2xl font-semibold text-gray-900 mb-8">Pending Orders</h1>
 
             {loadingOrders ? (
               <div className="text-center py-8">
@@ -183,17 +186,18 @@ export default function OrdersPage() {
                 ))}
               </div>
             )}
+            </div>
           </div>
         </div>
-      </div>
 
-      {/* Cancel Order Modal */}
-      <CancelOrderModal
-        isOpen={cancelModalOpen}
-        onClose={() => setCancelModalOpen(false)}
-        orderId={selectedOrderId}
-        onConfirm={confirmCancelOrder}
-      />
-    </div>
+        {/* Cancel Order Modal */}
+        <CancelOrderModal
+          isOpen={cancelModalOpen}
+          onClose={() => setCancelModalOpen(false)}
+          orderId={selectedOrderId}
+          onConfirm={confirmCancelOrder}
+        />
+      </div>
+    </Layout>
   );
 }
