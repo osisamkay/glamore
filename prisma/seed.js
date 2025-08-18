@@ -61,9 +61,42 @@ async function main() {
   console.log('🌱 Starting database seeding...');
   
   try {
-    // Clear existing products
-    console.log('🧹 Clearing existing products...');
+    // Clear existing data
+    console.log('🧹 Clearing existing data...');
     await prisma.product.deleteMany();
+    await prisma.user.deleteMany();
+    await prisma.giftCard.deleteMany();
+    
+    // Create users with roles
+    console.log('👥 Creating users...');
+    const users = [
+      {
+        email: 'admin@glamore.com',
+        password: '$2b$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
+        firstName: 'Admin',
+        lastName: 'User',
+        role: 'admin'
+      },
+      {
+        email: 'cs@glamore.com',
+        password: '$2b$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
+        firstName: 'Customer',
+        lastName: 'Service',
+        role: 'customer_service'
+      },
+      {
+        email: 'customer@example.com',
+        password: '$2b$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
+        firstName: 'Jane',
+        lastName: 'Customer',
+        role: 'customer'
+      }
+    ];
+
+    for (const user of users) {
+      await prisma.user.create({ data: user });
+      console.log(`✅ Created user: ${user.email} (${user.role})`);
+    }
     
     // Seed products from existing data
     console.log('📦 Creating products from src/data/products.js...');
@@ -74,9 +107,29 @@ async function main() {
       console.log(`✅ Created: ${product.name}`);
     }
     
+    // Create gift cards
+    console.log('🎁 Creating gift cards...');
+    const giftCards = [
+      { code: 'WELCOME50', balance: 50.00 },
+      { code: 'SAVE100', balance: 100.00 },
+      { code: 'VIP200', balance: 200.00 }
+    ];
+
+    for (const card of giftCards) {
+      await prisma.giftCard.create({ data: card });
+      console.log(`✅ Created gift card: ${card.code} ($${card.balance})`);
+    }
+    
     // Get final count
     const totalProducts = await prisma.product.count();
-    console.log(`\n🎉 Seeding completed! Created ${totalProducts} products.`);
+    const totalUsers = await prisma.user.count();
+    const totalGiftCards = await prisma.giftCard.count();
+    
+    console.log(`\n🎉 Seeding completed!`);
+    console.log(`📊 Summary:`);
+    console.log(`   👥 Users: ${totalUsers}`);
+    console.log(`   📦 Products: ${totalProducts}`);
+    console.log(`   🎁 Gift Cards: ${totalGiftCards}`);
     
     // Show breakdown by category
     const womenCount = await prisma.product.count({ where: { category: 'women' } });

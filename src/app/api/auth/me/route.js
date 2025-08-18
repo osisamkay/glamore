@@ -7,7 +7,9 @@ import jwt from 'jsonwebtoken';
 export async function GET() {
   try {
     const cookieStore = await cookies();
-    const token = cookieStore.get('token')?.value;
+    const token = cookieStore.get('token')?.value || 
+                  cookieStore.get('admin_token')?.value || 
+                  cookieStore.get('cs_token')?.value;
 
     if (!token) {
       return NextResponse.json(
@@ -35,9 +37,7 @@ export async function GET() {
     // Return user without password
     const { password: _, ...userWithoutPassword } = user;
 
-    return NextResponse.json({
-      user: userWithoutPassword
-    });
+    return NextResponse.json(userWithoutPassword);
 
   } catch (error) {
     console.error('Auth check error:', error);

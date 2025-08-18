@@ -83,6 +83,30 @@ export function AuthProvider({ children }) {
     }
   };
 
+  const adminLogin = async (email, password) => {
+    try {
+      const response = await fetch('/api/auth/admin/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        setUser(data.user);
+        return { success: true, user: data.user };
+      } else {
+        return { success: false, error: data.error };
+      }
+    } catch (error) {
+      console.error('Admin login error:', error);
+      return { success: false, error: 'Network error' };
+    }
+  };
+
   const logout = async () => {
     try {
       await fetch('/api/auth/logout', {
@@ -100,6 +124,7 @@ export function AuthProvider({ children }) {
     user,
     loading,
     login,
+    adminLogin,
     signup,
     logout,
     isAuthenticated: !!user,

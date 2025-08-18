@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { useAuth } from '@/context/AuthContext';
 
 export default function AdminLoginPage() {
   const [formData, setFormData] = useState({
@@ -13,6 +14,7 @@ export default function AdminLoginPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   const router = useRouter();
+  const { adminLogin } = useAuth();
 
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -27,32 +29,13 @@ export default function AdminLoginPage() {
     setIsLoading(true);
     setError('');
 
-    try {
-      const response = await fetch('/api/auth/admin/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          email: formData.email,
-          password: formData.password,
-          rememberMe: formData.rememberMe
-        }),
-      });
+    const result = await adminLogin(formData.email, formData.password);
+    setIsLoading(false);
 
-      const data = await response.json();
-
-      if (response.ok) {
-        // Redirect to admin dashboard
-        router.push('/admin/dashboard');
-      } else {
-        setError(data.error || 'Login failed');
-      }
-    } catch (error) {
-      console.error('Login error:', error);
-      setError('An error occurred. Please try again.');
-    } finally {
-      setIsLoading(false);
+    if (result.success) {
+      router.push('/admin/dashboard');
+    } else {
+      setError(result.error || 'Login failed');
     }
   };
 
