@@ -58,11 +58,13 @@ export default function Navbar({ type }) {
                   onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
                   className="flex items-center space-x-2 hover:opacity-80 transition-opacity"
                 >
-                  {/* User Avatar SVG */}
-                  <div className="w-8 h-8 bg-white rounded-full flex items-center justify-center">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-[#56193F]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                    </svg>
+                  <div className="w-8 h-8 relative">
+                    <Image
+                      src="/images/avatar.svg"
+                      alt="User avatar"
+                      layout="fill"
+                      className="rounded-full object-cover"
+                    />
                   </div>
                   <span className="hidden md:block text-sm">{user?.firstName || 'User'}</span>
                 </button>

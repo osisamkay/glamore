@@ -14,6 +14,7 @@ model Product {
   id          String   @id @default(cuid())
   name        String
   price       Float
+  buyPrice    Float    @default(0)
   image       String
   category    String
   colors      String   // Comma-separated colors like "Red,Blue,Green"
@@ -107,7 +108,8 @@ model OrderItem {
   createdAt          DateTime @default(now())
   
   // Relations
-  order     Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  order       Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  returnItems ReturnRequestItem[]
 }
 
 model GiftCard {
@@ -168,4 +170,5 @@ model ReturnRequestItem {
   createdAt       DateTime      @default(now())
   
   returnRequest   ReturnRequest @relation(fields: [returnRequestId], references: [id], onDelete: Cascade)
+  orderItem       OrderItem     @relation(fields: [orderItemId], references: [id])
 }
