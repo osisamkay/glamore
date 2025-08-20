@@ -3,10 +3,11 @@
 
 generator client {
   provider = "prisma-client-js"
+  binaryTargets = ["native", "rhel-openssl-3.0.x"]
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
@@ -34,9 +35,8 @@ model User {
   id        String   @id @default(cuid())
   email     String   @unique
   password  String
-  firstName String
-  lastName  String
-  role      String   @default("customer") // customer, admin, customer_service
+  name      String?
+  role      String   @default("user")
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   
