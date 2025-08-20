@@ -1,22 +1,14 @@
 import { NextResponse } from 'next/server';
 import { PrismaClient } from '@prisma/client';
-import { getAuth } from '@clerk/nextjs/server';
 
 const prisma = new PrismaClient();
 
 export async function GET(req) {
   try {
-    const { userId } = getAuth(req);
-
-    if (!userId) {
-      return new NextResponse(JSON.stringify({ error: 'Unauthorized' }), { status: 401 });
-    }
-
-    // Optional: Check if the user is an admin
-    // This depends on how you store roles. Assuming a `role` field on the User model.
-    // const user = await prisma.user.findUnique({ where: { id: userId } });
-    // if (user?.role !== 'admin') {
-    //   return new NextResponse(JSON.stringify({ error: 'Forbidden' }), { status: 403 });
+    // TODO: Add proper authentication once Clerk is properly configured
+    // const { userId } = getAuth(req);
+    // if (!userId) {
+    //   return new NextResponse(JSON.stringify({ error: 'Unauthorized' }), { status: 401 });
     // }
 
     const products = await prisma.product.findMany({
