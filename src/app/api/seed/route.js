@@ -1,81 +1,119 @@
 import { NextResponse } from 'next/server';
-import { prisma } from '@/lib/db';
-import { featuredProducts } from '@/data/products';
+import { neon } from '@neondatabase/serverless';
 
 export async function POST() {
   try {
-    console.log('🌱 Starting database seeding...');
+    const sql = neon(process.env.DATABASE_URL);
     
-    // Check if featuredProducts is imported correctly
-    if (!featuredProducts) {
-      console.error('❌ featuredProducts is undefined!');
-      return NextResponse.json({ error: 'featuredProducts import failed' }, { status: 500 });
-    }
-    
-    console.log('📊 featuredProducts structure:', Object.keys(featuredProducts));
-    console.log('👩 Women products count:', featuredProducts.women?.length || 0);
-    console.log('👨 Men products count:', featuredProducts.men?.length || 0);
-    console.log('👶 Kids products count:', featuredProducts.kids?.length || 0);
-
     // Clear existing products
-    await prisma.product.deleteMany({});
-    console.log('🗑️ Cleared existing products');
-
-    // Get all products from all categories
-    const allProducts = [
-      ...(featuredProducts.women || []),
-      ...(featuredProducts.men || []),
-      ...(featuredProducts.kids || [])
+    await sql`DELETE FROM "Product"`;
+    
+    // Seed products
+    const products = [
+      {
+        name: "Ankara Bliss Gown",
+        price: 45000,
+        buyPrice: 25000,
+        image: "/Women's GGF Photos/Ankara Bliss Gown, homepage.jpg",
+        category: "women",
+        colors: "Red,Blue,Green",
+        sizes: "S,M,L,XL",
+        quantity: 15,
+        description: "Beautiful Ankara gown perfect for special occasions"
+      },
+      {
+        name: "Eyo Junior Shirt",
+        price: 22000,
+        buyPrice: 12000,
+        image: "/Kids GGF Photos/Eyo Junior Shirt.jpg",
+        category: "kids",
+        colors: "White,Blue",
+        sizes: "XS,S,M",
+        quantity: 8,
+        description: "Traditional Eyo design shirt for kids"
+      },
+      {
+        name: "Black Patch Dress",
+        price: 35000,
+        buyPrice: 18000,
+        image: "/Men's GGF Photos/Black Patch Dress.jpg",
+        category: "men",
+        colors: "Black,Navy",
+        sizes: "M,L,XL,XXL",
+        quantity: 12,
+        description: "Elegant black patch dress for men"
+      },
+      {
+        name: "Brown Necklace",
+        price: 15000,
+        buyPrice: 8000,
+        image: "/Men's GGF Photos/Brown Necklace.png",
+        category: "men",
+        colors: "Brown,Gold",
+        sizes: "One Size",
+        quantity: 20,
+        description: "Stylish brown necklace for men"
+      },
+      {
+        name: "Bow Ankara Shirt",
+        price: 18000,
+        buyPrice: 10000,
+        image: "/Kids GGF Photos/Bow Ankara Shirt.jpg",
+        category: "kids",
+        colors: "Multi,Colorful",
+        sizes: "XS,S,M",
+        quantity: 10,
+        description: "Colorful Ankara shirt with bow design for kids"
+      },
+      {
+        name: "Ankara Clutch Luxe",
+        price: 12000,
+        buyPrice: 6000,
+        image: "/Women's GGF Photos/Ankara Cluch Luxe.png",
+        category: "women",
+        colors: "Multi,Pattern",
+        sizes: "One Size",
+        quantity: 25,
+        description: "Luxurious Ankara clutch bag for special occasions"
+      },
+      {
+        name: "Beatea Dress",
+        price: 38000,
+        buyPrice: 20000,
+        image: "/Women's GGF Photos/Beatea.png",
+        category: "women",
+        colors: "Blue,White",
+        sizes: "S,M,L,XL",
+        quantity: 18,
+        description: "Elegant Beatea dress with modern African styling"
+      }
     ];
 
-    console.log(`📦 Seeding ${allProducts.length} products...`);
-    if (allProducts.length > 0) {
-      console.log('🔍 First product sample:', JSON.stringify(allProducts[0], null, 2));
-    } else {
-      console.error('❌ No products found to seed!');
-      return NextResponse.json({ error: 'No products found in featuredProducts' }, { status: 400 });
+    let createdCount = 0;
+    for (const product of products) {
+      await sql`
+        INSERT INTO "Product" (id, name, price, "buyPrice", image, category, colors, sizes, quantity, description, "createdAt", "updatedAt")
+        VALUES (gen_random_uuid(), ${product.name}, ${product.price}, ${product.buyPrice}, ${product.image}, ${product.category}, ${product.colors}, ${product.sizes}, ${product.quantity}, ${product.description}, NOW(), NOW())
+      `;
+      createdCount++;
     }
 
-    // Seed all products
-    const createdProducts = [];
-    for (const product of allProducts) {
-      try {
-        const createdProduct = await prisma.product.create({
-          data: {
-            name: product.name,
-            image: product.image,
-            price: product.price,
-            category: product.category,
-            colors: generateColors(product).join(','), // Multiple colors
-            sizes: generateSizes(product.category).join(','), // At least 5 sizes
-            quantity: Math.floor(Math.random() * 50) + 20, // Random quantity 20-70
-            description: generateDescription(product)
-          }
-        });
-        createdProducts.push(createdProduct);
-        console.log(`✅ Added: ${product.name}`);
-      } catch (error) {
-        console.error(`❌ Failed to add ${product.name}:`, error.message);
-        console.error('Product data:', JSON.stringify(product, null, 2));
-      }
-    }
-
-    const totalCount = await prisma.product.count();
-    console.log(`✨ Database seeding completed! Total products: ${totalCount}`);
+    const result = await sql`SELECT COUNT(*) as count FROM "Product"`;
+    const totalCount = parseInt(result[0].count);
 
     return NextResponse.json({
       success: true,
       message: 'Database seeded successfully',
-      productsAdded: createdProducts.length,
+      productsAdded: createdCount,
       totalProducts: totalCount
     });
 
   } catch (error) {
-    console.error('❌ Seeding failed:', error);
-    return NextResponse.json(
-      { error: 'Failed to seed database', details: error.message },
-      { status: 500 }
-    );
+    console.error('Seed error:', error);
+    return NextResponse.json({
+      error: 'Failed to seed database',
+      details: error.message
+    }, { status: 500 });
   }
 }
 
