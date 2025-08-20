@@ -7,6 +7,7 @@ import AdminSidebar from '@/components/AdminSidebar';
 import AdminStatsCard from '@/components/AdminStatsCard';
 import AdminChart from '@/components/AdminChart';
 import AdminTopCategories from '@/components/AdminTopCategories';
+import Image from 'next/image';
 
 export default function AdminDashboard() {
   const { user, loading } = useAuth();
@@ -83,12 +84,15 @@ export default function AdminDashboard() {
             </div>
             
             <div className="flex items-center space-x-2">
-              <div className="w-8 h-8 bg-purple-600 rounded-full flex items-center justify-center">
-                <span className="text-white text-sm font-medium">
-                  {user.firstName?.[0]}{user.lastName?.[0]}
-                </span>
+              <div className="w-8 h-8 relative">
+                <Image
+                  src="/images/avatar.svg"
+                  alt="User avatar"
+                  layout="fill"
+                  className="rounded-full object-cover"
+                />
               </div>
-              <span className="text-sm text-gray-700">Manager name</span>
+              <span className="text-sm text-gray-700">{user?.firstName || 'Admin'}</span>
             </div>
           </div>
         </div>
