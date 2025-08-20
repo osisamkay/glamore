@@ -1,7 +1,14 @@
 import { NextResponse } from 'next/server';
 import { PrismaClient } from '@prisma/client';
 
-const prisma = new PrismaClient();
+let prisma;
+
+// Initialize Prisma with error handling
+try {
+  prisma = new PrismaClient();
+} catch (error) {
+  console.error('Failed to initialize Prisma:', error);
+}
 
 export async function GET(req) {
   try {
@@ -10,6 +17,15 @@ export async function GET(req) {
     // if (!userId) {
     //   return new NextResponse(JSON.stringify({ error: 'Unauthorized' }), { status: 401 });
     // }
+
+    // Check if Prisma is available
+    if (!prisma) {
+      console.error('Prisma client not initialized');
+      return NextResponse.json({ 
+        error: 'Database connection failed',
+        products: [] // Return empty array as fallback
+      }, { status: 500 });
+    }
 
     const products = await prisma.product.findMany({
       orderBy: {
@@ -27,9 +43,18 @@ export async function GET(req) {
       sellPrice: p.price, // `price` from schema is the sell price
     }));
 
-    return new NextResponse(JSON.stringify(formattedProducts), { status: 200 });
+    return NextResponse.json(formattedProducts, { status: 200 });
   } catch (error) {
     console.error('Failed to fetch products:', error);
-    return new NextResponse(JSON.stringify({ error: 'Failed to fetch products' }), { status: 500 });
+    return NextResponse.json({ 
+      error: 'Failed to fetch products',
+      details: error.message,
+      products: [] // Return empty array as fallback
+    }, { status: 500 });
+  } finally {
+    // Clean up Prisma connection
+    if (prisma) {
+      await prisma.$disconnect();
+    }
   }
 }
