@@ -1,29 +1,42 @@
 import { NextResponse } from 'next/server';
-import { prisma } from '@/lib/db';
+import { neon } from '@neondatabase/serverless';
 
 export async function POST(request) {
   try {
+    const sql = neon(process.env.DATABASE_URL);
     const body = await request.json();
     const { category, limit = 20, search } = body;
 
-    let whereClause = {};
+    let products;
     
-    if (category && category !== 'all') {
-      whereClause.category = category;
+    if (category && category !== 'all' && search) {
+      products = await sql`
+        SELECT * FROM "Product" 
+        WHERE category = ${category} AND (name ILIKE ${`%${search}%`} OR description ILIKE ${`%${search}%`})
+        ORDER BY "createdAt" DESC 
+        LIMIT ${limit}
+      `;
+    } else if (category && category !== 'all') {
+      products = await sql`
+        SELECT * FROM "Product" 
+        WHERE category = ${category}
+        ORDER BY "createdAt" DESC 
+        LIMIT ${limit}
+      `;
+    } else if (search) {
+      products = await sql`
+        SELECT * FROM "Product" 
+        WHERE name ILIKE ${`%${search}%`} OR description ILIKE ${`%${search}%`}
+        ORDER BY "createdAt" DESC 
+        LIMIT ${limit}
+      `;
+    } else {
+      products = await sql`
+        SELECT * FROM "Product" 
+        ORDER BY "createdAt" DESC 
+        LIMIT ${limit}
+      `;
     }
-    
-    if (search) {
-      whereClause.OR = [
-        { name: { contains: search, mode: 'insensitive' } },
-        { description: { contains: search, mode: 'insensitive' } }
-      ];
-    }
-
-    const products = await prisma.product.findMany({
-      where: whereClause,
-      take: limit,
-      orderBy: { createdAt: 'desc' }
-    });
 
     return NextResponse.json({
       success: true,
@@ -39,29 +52,42 @@ export async function POST(request) {
 
 export async function GET(request) {
   try {
+    const sql = neon(process.env.DATABASE_URL);
     const { searchParams } = new URL(request.url);
     const category = searchParams.get('category');
     const limit = parseInt(searchParams.get('limit')) || 20;
     const search = searchParams.get('search');
 
-    let whereClause = {};
+    let products;
     
-    if (category && category !== 'all') {
-      whereClause.category = category;
+    if (category && category !== 'all' && search) {
+      products = await sql`
+        SELECT * FROM "Product" 
+        WHERE category = ${category} AND (name ILIKE ${`%${search}%`} OR description ILIKE ${`%${search}%`})
+        ORDER BY "createdAt" DESC 
+        LIMIT ${limit}
+      `;
+    } else if (category && category !== 'all') {
+      products = await sql`
+        SELECT * FROM "Product" 
+        WHERE category = ${category}
+        ORDER BY "createdAt" DESC 
+        LIMIT ${limit}
+      `;
+    } else if (search) {
+      products = await sql`
+        SELECT * FROM "Product" 
+        WHERE name ILIKE ${`%${search}%`} OR description ILIKE ${`%${search}%`}
+        ORDER BY "createdAt" DESC 
+        LIMIT ${limit}
+      `;
+    } else {
+      products = await sql`
+        SELECT * FROM "Product" 
+        ORDER BY "createdAt" DESC 
+        LIMIT ${limit}
+      `;
     }
-    
-    if (search) {
-      whereClause.OR = [
-        { name: { contains: search, mode: 'insensitive' } },
-        { description: { contains: search, mode: 'insensitive' } }
-      ];
-    }
-
-    const products = await prisma.product.findMany({
-      where: whereClause,
-      take: limit,
-      orderBy: { createdAt: 'desc' }
-    });
 
     // Parse colors and sizes from comma-separated strings
     const parsedProducts = products.map(product => ({

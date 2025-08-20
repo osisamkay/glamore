@@ -1,7 +1,5 @@
 import { NextResponse } from 'next/server';
-import { PrismaClient } from '@prisma/client';
-
-const prisma = new PrismaClient();
+import { neon } from '@neondatabase/serverless';
 
 // Validate gift card and get balance
 export async function GET(request) {
@@ -16,9 +14,13 @@ export async function GET(request) {
       );
     }
 
-    const giftCard = await prisma.giftCard.findUnique({
-      where: { code: code.toUpperCase() }
-    });
+    const sql = neon(process.env.DATABASE_URL);
+    
+    const giftCardResult = await sql`
+      SELECT * FROM "GiftCard" WHERE code = ${code.toUpperCase()}
+    `;
+    
+    const giftCard = giftCardResult[0];
 
     if (!giftCard) {
       return NextResponse.json(
@@ -78,9 +80,13 @@ export async function POST(request) {
       );
     }
 
-    const giftCard = await prisma.giftCard.findUnique({
-      where: { code: code.toUpperCase() }
-    });
+    const sql = neon(process.env.DATABASE_URL);
+    
+    const giftCardResult = await sql`
+      SELECT * FROM "GiftCard" WHERE code = ${code.toUpperCase()}
+    `;
+    
+    const giftCard = giftCardResult[0];
 
     if (!giftCard || !giftCard.isActive || giftCard.balance < amount) {
       return NextResponse.json(
@@ -90,13 +96,14 @@ export async function POST(request) {
     }
 
     // Deduct the amount from gift card balance
-    const updatedGiftCard = await prisma.giftCard.update({
-      where: { code: code.toUpperCase() },
-      data: { 
-        balance: giftCard.balance - amount,
-        updatedAt: new Date()
-      }
-    });
+    const updatedResult = await sql`
+      UPDATE "GiftCard" 
+      SET balance = ${giftCard.balance - amount}, "updatedAt" = NOW()
+      WHERE code = ${code.toUpperCase()}
+      RETURNING *
+    `;
+    
+    const updatedGiftCard = updatedResult[0];
 
     return NextResponse.json({
       success: true,
@@ -125,13 +132,15 @@ export async function PUT(request) {
       );
     }
 
-    const giftCard = await prisma.giftCard.create({
-      data: {
-        code: code.toUpperCase(),
-        balance: parseFloat(balance),
-        expiresAt: expiresAt ? new Date(expiresAt) : null
-      }
-    });
+    const sql = neon(process.env.DATABASE_URL);
+    
+    const giftCardResult = await sql`
+      INSERT INTO "GiftCard" (id, code, balance, "expiresAt", "createdAt", "updatedAt")
+      VALUES (gen_random_uuid(), ${code.toUpperCase()}, ${parseFloat(balance)}, ${expiresAt ? new Date(expiresAt) : null}, NOW(), NOW())
+      RETURNING *
+    `;
+    
+    const giftCard = giftCardResult[0];
 
     return NextResponse.json({
       success: true,

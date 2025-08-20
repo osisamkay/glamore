@@ -1,24 +1,26 @@
 import { NextResponse } from 'next/server';
-import { prisma } from '@/lib/db';
+import { neon } from '@neondatabase/serverless';
 
 export async function GET(request) {
   try {
-    const totalSalesData = await prisma.order.aggregate({
-      _sum: {
-        total: true,
-      },
-    });
+    const sql = neon(process.env.DATABASE_URL);
+    
+    const totalSalesResult = await sql`
+      SELECT COALESCE(SUM(total), 0) as total_sales FROM "Order"
+    `;
 
-    const totalVisitors = await prisma.user.count();
+    const totalVisitorsResult = await sql`
+      SELECT COUNT(*) as count FROM "User"
+    `;
 
-    const totalRefunds = await prisma.order.count({
-        where: { status: 'REFUNDED' },
-      });
+    const totalRefundsResult = await sql`
+      SELECT COUNT(*) as count FROM "Order" WHERE status = 'REFUNDED'
+    `;
 
     return NextResponse.json({
-      totalSales: totalSalesData._sum.total || 0,
-      visitors: totalVisitors,
-      refunds: totalRefunds,
+      totalSales: parseFloat(totalSalesResult[0].total_sales) || 0,
+      visitors: parseInt(totalVisitorsResult[0].count) || 0,
+      refunds: parseInt(totalRefundsResult[0].count) || 0,
     });
   } catch (error) {
     console.error('Error fetching admin stats:', error);

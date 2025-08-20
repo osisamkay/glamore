@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { prisma } from '@/lib/db';
+import { neon } from '@neondatabase/serverless';
 import bcrypt from 'bcryptjs';
 import { sendWelcomeEmail } from '@/lib/email';
 
@@ -15,10 +15,14 @@ export async function POST(request) {
       );
     }
 
+    const sql = neon(process.env.DATABASE_URL);
+    
     // Check if user already exists
-    const existingUser = await prisma.user.findUnique({
-      where: { email }
-    });
+    const existingUserResult = await sql`
+      SELECT * FROM "User" WHERE email = ${email}
+    `;
+    
+    const existingUser = existingUserResult[0];
 
     if (existingUser) {
       return NextResponse.json(
@@ -31,18 +35,18 @@ export async function POST(request) {
     const hashedPassword = await bcrypt.hash(password, 12);
 
     // Create user (handle both name formats)
-    const user = await prisma.user.create({
-      data: {
-        email,
-        password: hashedPassword,
-        firstName: firstName || name || 'User',
-        lastName: lastName || ''
-      }
-    });
+    const fullName = name || `${firstName || ''} ${lastName || ''}`.trim() || 'User';
+    const userResult = await sql`
+      INSERT INTO "User" (id, email, password, name, role, "createdAt", "updatedAt")
+      VALUES (gen_random_uuid(), ${email}, ${hashedPassword}, ${fullName}, 'user', NOW(), NOW())
+      RETURNING *
+    `;
+    
+    const user = userResult[0];
 
     // Send welcome email (don't block signup if email fails)
     try {
-      await sendWelcomeEmail(user.email, user.firstName, user.lastName);
+      await sendWelcomeEmail(user.email, user.name, '');
     } catch (emailError) {
       console.error('Failed to send welcome email:', emailError);
       // Continue with successful signup even if email fails

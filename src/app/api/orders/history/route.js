@@ -1,24 +1,25 @@
 import { NextResponse } from 'next/server';
-import { PrismaClient } from '@prisma/client';
-
-const prisma = new PrismaClient();
+import { neon } from '@neondatabase/serverless';
 
 export async function GET(request) {
   try {
+    const sql = neon(process.env.DATABASE_URL);
+    
     // Get orders with status 'delivered', 'cancelled', or 'completed'
-    const orders = await prisma.order.findMany({
-      where: {
-        status: {
-          in: ['delivered', 'cancelled', 'completed']
-        }
-      },
-      include: {
-        items: true
-      },
-      orderBy: {
-        createdAt: 'desc'
-      }
-    });
+    const ordersResult = await sql`
+      SELECT * FROM "Order" 
+      WHERE status IN ('delivered', 'cancelled', 'completed')
+      ORDER BY "createdAt" DESC
+    `;
+    
+    // Get items for each order
+    const orders = [];
+    for (const order of ordersResult) {
+      const items = await sql`
+        SELECT * FROM "OrderItem" WHERE "orderId" = ${order.id}
+      `;
+      orders.push({ ...order, items });
+    }
 
     return NextResponse.json({
       success: true,

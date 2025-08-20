@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { prisma } from '@/lib/db';
+import { neon } from '@neondatabase/serverless';
 
 export async function GET(request) {
   const { searchParams } = new URL(request.url);
@@ -47,15 +47,112 @@ export async function GET(request) {
   }
 
   try {
-    const orders = await prisma.order.findMany({
-      where: whereClause.AND.length > 0 ? whereClause : undefined,
-      include: {
-        items: true
-      },
-      orderBy: {
-        [sortField === 'date' ? 'createdAt' : 'total']: sortOrder,
-      },
-    });
+    const sql = neon(process.env.DATABASE_URL);
+    
+    let ordersResult;
+    const orderByField = sortField === 'date' ? '"createdAt"' : 'total';
+    const orderDirection = sortOrder.toUpperCase();
+    
+    if (search && status && status !== 'Any Status') {
+      if (orderByField === '"createdAt"' && orderDirection === 'DESC') {
+        ordersResult = await sql`
+          SELECT * FROM "Order" 
+          WHERE (id ILIKE ${`%${search}%`} OR "firstName" ILIKE ${`%${search}%`} OR "lastName" ILIKE ${`%${search}%`}) 
+          AND status = ${status}
+          ORDER BY "createdAt" DESC
+        `;
+      } else if (orderByField === '"createdAt"' && orderDirection === 'ASC') {
+        ordersResult = await sql`
+          SELECT * FROM "Order" 
+          WHERE (id ILIKE ${`%${search}%`} OR "firstName" ILIKE ${`%${search}%`} OR "lastName" ILIKE ${`%${search}%`}) 
+          AND status = ${status}
+          ORDER BY "createdAt" ASC
+        `;
+      } else if (orderByField === 'total' && orderDirection === 'DESC') {
+        ordersResult = await sql`
+          SELECT * FROM "Order" 
+          WHERE (id ILIKE ${`%${search}%`} OR "firstName" ILIKE ${`%${search}%`} OR "lastName" ILIKE ${`%${search}%`}) 
+          AND status = ${status}
+          ORDER BY total DESC
+        `;
+      } else {
+        ordersResult = await sql`
+          SELECT * FROM "Order" 
+          WHERE (id ILIKE ${`%${search}%`} OR "firstName" ILIKE ${`%${search}%`} OR "lastName" ILIKE ${`%${search}%`}) 
+          AND status = ${status}
+          ORDER BY total ASC
+        `;
+      }
+    } else if (search) {
+      if (orderByField === '"createdAt"' && orderDirection === 'DESC') {
+        ordersResult = await sql`
+          SELECT * FROM "Order" 
+          WHERE id ILIKE ${`%${search}%`} OR "firstName" ILIKE ${`%${search}%`} OR "lastName" ILIKE ${`%${search}%`}
+          ORDER BY "createdAt" DESC
+        `;
+      } else if (orderByField === '"createdAt"' && orderDirection === 'ASC') {
+        ordersResult = await sql`
+          SELECT * FROM "Order" 
+          WHERE id ILIKE ${`%${search}%`} OR "firstName" ILIKE ${`%${search}%`} OR "lastName" ILIKE ${`%${search}%`}
+          ORDER BY "createdAt" ASC
+        `;
+      } else if (orderByField === 'total' && orderDirection === 'DESC') {
+        ordersResult = await sql`
+          SELECT * FROM "Order" 
+          WHERE id ILIKE ${`%${search}%`} OR "firstName" ILIKE ${`%${search}%`} OR "lastName" ILIKE ${`%${search}%`}
+          ORDER BY total DESC
+        `;
+      } else {
+        ordersResult = await sql`
+          SELECT * FROM "Order" 
+          WHERE id ILIKE ${`%${search}%`} OR "firstName" ILIKE ${`%${search}%`} OR "lastName" ILIKE ${`%${search}%`}
+          ORDER BY total ASC
+        `;
+      }
+    } else if (status && status !== 'Any Status') {
+      if (orderByField === '"createdAt"' && orderDirection === 'DESC') {
+        ordersResult = await sql`
+          SELECT * FROM "Order" 
+          WHERE status = ${status}
+          ORDER BY "createdAt" DESC
+        `;
+      } else if (orderByField === '"createdAt"' && orderDirection === 'ASC') {
+        ordersResult = await sql`
+          SELECT * FROM "Order" 
+          WHERE status = ${status}
+          ORDER BY "createdAt" ASC
+        `;
+      } else if (orderByField === 'total' && orderDirection === 'DESC') {
+        ordersResult = await sql`
+          SELECT * FROM "Order" 
+          WHERE status = ${status}
+          ORDER BY total DESC
+        `;
+      } else {
+        ordersResult = await sql`
+          SELECT * FROM "Order" 
+          WHERE status = ${status}
+          ORDER BY total ASC
+        `;
+      }
+    } else {
+      if (orderByField === '"createdAt"' && orderDirection === 'DESC') {
+        ordersResult = await sql`SELECT * FROM "Order" ORDER BY "createdAt" DESC`;
+      } else if (orderByField === '"createdAt"' && orderDirection === 'ASC') {
+        ordersResult = await sql`SELECT * FROM "Order" ORDER BY "createdAt" ASC`;
+      } else if (orderByField === 'total' && orderDirection === 'DESC') {
+        ordersResult = await sql`SELECT * FROM "Order" ORDER BY total DESC`;
+      } else {
+        ordersResult = await sql`SELECT * FROM "Order" ORDER BY total ASC`;
+      }
+    }
+    
+    // Get items for each order
+    const orders = [];
+    for (const order of ordersResult) {
+      const items = await sql`SELECT * FROM "OrderItem" WHERE "orderId" = ${order.id}`;
+      orders.push({ ...order, items });
+    }
 
     return NextResponse.json(orders);
   } catch (error) {

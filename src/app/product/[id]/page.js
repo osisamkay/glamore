@@ -12,8 +12,8 @@ async function getProduct(id) {
       return null;
     }
     
-    const product = await res.json();
-    return product;
+    const data = await res.json();
+    return data.success ? data.product : data;
   } catch (error) {
     console.error('Error fetching product:', error);
     return null;

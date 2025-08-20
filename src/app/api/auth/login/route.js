@@ -1,9 +1,8 @@
 import { NextResponse } from 'next/server';
-import { prisma } from '@/lib/db';
+import { neon } from '@neondatabase/serverless';
 import bcrypt from 'bcryptjs';
 import { cookies } from 'next/headers';
 import jwt from 'jsonwebtoken';
-
 
 export async function POST(request) {
   try {
@@ -17,10 +16,14 @@ export async function POST(request) {
       );
     }
 
+    const sql = neon(process.env.DATABASE_URL);
+    
     // Find user by email
-    const user = await prisma.user.findUnique({
-      where: { email }
-    });
+    const userResult = await sql`
+      SELECT * FROM "User" WHERE email = ${email}
+    `;
+    
+    const user = userResult[0];
 
     if (!user) {
       return NextResponse.json(

@@ -1,23 +1,25 @@
 import { NextResponse } from 'next/server';
-import { prisma } from '@/lib/db';
+import { neon } from '@neondatabase/serverless';
 
 export async function GET(request) {
   try {
-    // Get sales data for the last 12 months
-    const salesData = await prisma.$queryRaw`
+    const sql = neon(process.env.DATABASE_URL);
+    
+    // Get sales data for the last 12 months (PostgreSQL syntax)
+    const salesData = await sql`
       SELECT
-        strftime('%Y-%m', "createdAt") as month,
-        SUM(total) as totalSales
+        TO_CHAR("createdAt", 'YYYY-MM') as month,
+        SUM(total) as "totalSales"
       FROM "Order"
-      WHERE "createdAt" >= strftime('%Y-%m-%d %H:%M:%S', date('now', '-12 months'))
-      GROUP BY month
+      WHERE "createdAt" >= NOW() - INTERVAL '12 months'
+      GROUP BY TO_CHAR("createdAt", 'YYYY-MM')
       ORDER BY month;
     `;
 
     // Format data for the chart
     const formattedData = salesData.map(item => ({
       name: item.month,
-      'Total Sales': item.totalSales,
+      'Total Sales': parseFloat(item.totalSales) || 0,
     }));
 
     return NextResponse.json(formattedData);
