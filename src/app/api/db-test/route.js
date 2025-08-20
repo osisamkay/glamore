@@ -1,22 +1,18 @@
 import { NextResponse } from 'next/server';
-import { PrismaClient } from '@prisma/client';
+import { neon } from '@neondatabase/serverless';
 
 export async function GET() {
-  let prisma;
-  
   try {
-    prisma = new PrismaClient();
+    const sql = neon(process.env.DATABASE_URL);
     
-    // Test database connection
-    await prisma.$connect();
-    
-    // Try a simple query
-    const productCount = await prisma.product.count();
+    // Test database connection with a simple query
+    const result = await sql`SELECT COUNT(*) as count FROM "Product"`;
+    const productCount = result[0]?.count || 0;
     
     return NextResponse.json({
       status: 'connected',
       message: 'Database connection successful',
-      productCount,
+      productCount: parseInt(productCount),
       timestamp: new Date().toISOString()
     });
     
@@ -29,10 +25,5 @@ export async function GET() {
       error: error.message,
       timestamp: new Date().toISOString()
     }, { status: 500 });
-    
-  } finally {
-    if (prisma) {
-      await prisma.$disconnect();
-    }
   }
 }

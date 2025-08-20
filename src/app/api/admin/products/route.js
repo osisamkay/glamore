@@ -1,15 +1,15 @@
 import { NextResponse } from 'next/server';
-import { PrismaClient } from '@prisma/client';
-
-const prisma = new PrismaClient();
+import { neon } from '@neondatabase/serverless';
 
 export async function GET(req) {
   try {
-    const products = await prisma.product.findMany({
-      orderBy: {
-        createdAt: 'desc',
-      },
-    });
+    const sql = neon(process.env.DATABASE_URL);
+    
+    const products = await sql`
+      SELECT id, name, quantity, "buyPrice", price, "createdAt"
+      FROM "Product"
+      ORDER BY "createdAt" DESC
+    `;
 
     const formattedProducts = products.map(p => ({
       sku: `#${p.id.substring(0, 6).toUpperCase()}`,
@@ -27,7 +27,5 @@ export async function GET(req) {
       details: error.message,
       products: []
     }, { status: 500 });
-  } finally {
-    await prisma.$disconnect();
   }
 }
