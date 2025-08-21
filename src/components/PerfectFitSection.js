@@ -11,16 +11,16 @@ const PerfectFitSection = ({ images }) => {
         <div className="relative h-[683px]">
           {/* Images positioned around the center */}
           <div className="absolute top-0 left-1/4 transform -translate-x-1/2 w-[250px] h-[375px] rounded-lg overflow-hidden">
-            <Image src={images[0]} alt="Fashion image 1" layout="fill" objectFit="cover" />
+            <Image src={images[0]} alt="Fashion image 1" fill className="object-cover" />
           </div>
           <div className="absolute top-10 right-0 w-[500px] h-[300px] rounded-lg overflow-hidden">
-            <Image src={images[1]} alt="Fashion image 2" layout="fill" objectFit="cover" />
+            <Image src={images[1]} alt="Fashion image 2" fill className="object-cover" />
           </div>
           <div className="absolute bottom-0 left-0 w-[239px] h-[338px] rounded-lg overflow-hidden">
-            <Image src={images[2]} alt="Fashion image 3" layout="fill" objectFit="cover" />
+            <Image src={images[2]} alt="Fashion image 3" fill className="object-cover" />
           </div>
           <div className="absolute bottom-0 right-0 w-[239px] h-[338px] rounded-lg overflow-hidden">
-            <Image src={images[3]} alt="Fashion image 4" layout="fill" objectFit="cover" />
+            <Image src={images[3]} alt="Fashion image 4" fill className="object-cover" />
           </div>
 
           {/* Text box in the center */}

@@ -93,7 +93,7 @@ export default function AdminProductsPage() {
                 <Image
                   src="/images/avatar.svg"
                   alt="User avatar"
-                  layout="fill"
+                  fill
                   className="rounded-full object-cover"
                 />
               </div>

@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test API</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        button { padding: 10px 20px; margin: 10px; background: #007bff; color: white; border: none; cursor: pointer; }
+        #result { margin-top: 20px; padding: 10px; border: 1px solid #ccc; background: #f9f9f9; white-space: pre-wrap; }
+    </style>
+</head>
+<body>
+    <h1>Glamore API Test</h1>
+    
+    <button onclick="testConnection()">Test API Connection</button>
+    <button onclick="runSeeding()">Run Database Seeding</button>
+    <button onclick="testLogin()">Test Admin Login</button>
+    
+    <div id="result">Click a button to test...</div>
+
+    <script>
+        const API_BASE = 'https://ggfashions.netlify.app';
+        
+        async function testConnection() {
+            updateResult('Testing API connection...');
+            try {
+                const response = await fetch(`${API_BASE}/api/db-test`);
+                const data = await response.json();
+                updateResult(`Connection test: ${JSON.stringify(data, null, 2)}`);
+            } catch (error) {
+                updateResult(`Connection error: ${error.message}`);
+            }
+        }
+        
+        async function runSeeding() {
+            updateResult('Starting database seeding...');
+            try {
+                const response = await fetch(`${API_BASE}/api/seed-all`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' }
+                });
+                const data = await response.json();
+                updateResult(`Seeding result: ${JSON.stringify(data, null, 2)}`);
+            } catch (error) {
+                updateResult(`Seeding error: ${error.message}`);
+            }
+        }
+        
+        async function testLogin() {
+            updateResult('Testing admin login...');
+            try {
+                const response = await fetch(`${API_BASE}/api/auth/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        email: 'admin@ggfashions.com',
+                        password: 'password123'
+                    })
+                });
+                const data = await response.json();
+                updateResult(`Login test: ${JSON.stringify(data, null, 2)}`);
+            } catch (error) {
+                updateResult(`Login error: ${error.message}`);
+            }
+        }
+        
+        function updateResult(message) {
+            document.getElementById('result').textContent = message;
+        }
+    </script>
+</body>
+</html>
