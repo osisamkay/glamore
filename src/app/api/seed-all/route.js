@@ -20,38 +20,36 @@ export async function POST() {
     
     console.log('Starting comprehensive database seeding...');
     
-    // First, create tables if they don't exist
-    await createTables(sql);
+    // Clear existing data
+    console.log('Clearing existing data...');
+    await sql`DELETE FROM "Order"`;
+    await sql`DELETE FROM "GiftCard"`;
+    await sql`DELETE FROM "Product"`;
+    await sql`DELETE FROM "User"`;
     
-    // Clear existing data (optional - comment out if you want to keep existing data)
-    await clearExistingData(sql);
-    
-    // Seed users (admin, customer service, regular users)
+    // Seed data
     await seedUsers(sql);
-    
-    // Seed products
     await seedProducts(sql);
-    
-    // Seed gift cards
     await seedGiftCards(sql);
+    await seedOrders(sql);
     
-    // Seed sample orders
-    await seedSampleOrders(sql);
+    // Verify seeding
+    const productCount = await sql`SELECT COUNT(*) as count FROM "Product"`;
+    const womenCount = await sql`SELECT COUNT(*) as count FROM "Product" WHERE category = 'women'`;
+    const menCount = await sql`SELECT COUNT(*) as count FROM "Product" WHERE category = 'men'`;
+    const kidsCount = await sql`SELECT COUNT(*) as count FROM "Product" WHERE category = 'kids'`;
     
-    console.log('Database seeding completed successfully');
-    
-    return NextResponse.json({
-      success: true,
+    return NextResponse.json({ 
+      success: true, 
       message: 'Database seeded successfully with all data',
-      timestamp: new Date().toISOString()
-    }, {
-      headers: {
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Methods': 'POST, OPTIONS',
-        'Access-Control-Allow-Headers': 'Content-Type'
+      timestamp: new Date().toISOString(),
+      counts: {
+        total: productCount[0].count,
+        women: womenCount[0].count,
+        men: menCount[0].count,
+        kids: kidsCount[0].count
       }
     });
-    
   } catch (error) {
     console.error('Seeding error:', error);
     return NextResponse.json({
