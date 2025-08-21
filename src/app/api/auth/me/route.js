@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { prisma } from '@/lib/db';
+import { neon } from '@neondatabase/serverless';
 import { cookies } from 'next/headers';
 import jwt from 'jsonwebtoken';
 
@@ -22,10 +22,17 @@ export async function GET() {
     const decoded = jwt.verify(token, process.env.JWT_SECRET || 'your-secret-key');
     const userId = decoded.userId;
 
+    const sql = neon(process.env.DATABASE_URL);
+
     // Find user by ID
-    const user = await prisma.user.findUnique({
-      where: { id: userId }
-    });
+    const users = await sql`
+      SELECT id, email, name, role, "createdAt", "updatedAt"
+      FROM "User" 
+      WHERE id = ${userId}
+      LIMIT 1
+    `;
+
+    const user = users[0];
 
     if (!user) {
       return NextResponse.json(
@@ -34,10 +41,7 @@ export async function GET() {
       );
     }
 
-    // Return user without password
-    const { password: _, ...userWithoutPassword } = user;
-
-    return NextResponse.json(userWithoutPassword);
+    return NextResponse.json({ user });
 
   } catch (error) {
     console.error('Auth check error:', error);

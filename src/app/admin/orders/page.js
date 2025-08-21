@@ -9,6 +9,8 @@ import { useRouter } from 'next/navigation';
 import AdminSidebar from '@/components/AdminSidebar';
 import TailoredOrdersView from '@/components/TailoredOrdersView';
 import OrderActionsDropdown from '@/components/OrderActionsDropdown';
+import RefundModal from '@/components/RefundModal';
+import TrackingModal from '@/components/TrackingModal';
 
 export default function AdminOrdersPage() {
   const { user, loading } = useAuth();
@@ -18,6 +20,8 @@ export default function AdminOrdersPage() {
   const [filters, setFilters] = useState({ status: 'Any Status', search: '' });
   const [sortBy, setSortBy] = useState('date_desc');
   const [activeTab, setActiveTab] = useState('regular');
+  const [isRefundModalOpen, setIsRefundModalOpen] = useState(false);
+  const [isTrackingModalOpen, setIsTrackingModalOpen] = useState(false);
 
   useEffect(() => {
     if (!loading && (!user || user.role !== 'admin')) {
@@ -78,8 +82,12 @@ export default function AdminOrdersPage() {
   const getStatusClass = (status) => {
     switch (status.toLowerCase()) {
       case 'paid': return 'bg-yellow-100 text-yellow-800';
+      case 'confirmed': return 'bg-green-100 text-green-800';
+      case 'packaged': return 'bg-purple-100 text-purple-800';
+      case 'shipped': return 'bg-blue-100 text-blue-800';
       case 'completed': return 'bg-green-100 text-green-800';
-      case 'delivered': return 'bg-blue-100 text-blue-800';
+      case 'delivered': return 'bg-green-100 text-green-800';
+      case 'refunded': return 'bg-orange-100 text-orange-800';
       case 'cancelled': return 'bg-red-100 text-red-800';
       default: return 'bg-gray-100 text-gray-800';
     }
@@ -126,8 +134,12 @@ export default function AdminOrdersPage() {
               <select name="status" value={filters.status} onChange={handleFilterChange} className="border rounded-lg px-4 py-2 bg-white">
                 <option>Any Status</option>
                 <option>Paid</option>
+                <option>Confirmed</option>
+                <option>Packaged</option>
+                <option>Shipped</option>
                 <option>Completed</option>
                 <option>Delivered</option>
+                <option>Refunded</option>
                 <option>Cancelled</option>
               </select>
                             <select value={sortBy} onChange={(e) => setSortBy(e.target.value)} className="border rounded-lg px-4 py-2 bg-white">
@@ -207,17 +219,64 @@ export default function AdminOrdersPage() {
               ))}
             </div>
             <div className="border-t pt-4 mt-4">
+              {selectedOrder.trackingNumber && (
+                <div className="mb-4 p-3 bg-blue-50 rounded-lg">
+                  <p className="text-sm font-medium text-blue-900 mb-1">Tracking Number</p>
+                  <p className="text-sm text-blue-700 font-mono">{selectedOrder.trackingNumber}</p>
+                </div>
+              )}
+              {selectedOrder.status === 'Refunded' && selectedOrder.refundReason && (
+                <div className="mb-4 p-3 bg-orange-50 rounded-lg">
+                  <p className="text-sm font-medium text-orange-900 mb-1">Refund Reason</p>
+                  <p className="text-sm text-orange-700">{selectedOrder.refundReason}</p>
+                </div>
+              )}
+              {selectedOrder.status === 'Cancelled' && selectedOrder.cancelReason && (
+                <div className="mb-4 p-3 bg-red-50 rounded-lg">
+                  <p className="text-sm font-medium text-red-900 mb-1">Cancel Reason</p>
+                  <p className="text-sm text-red-700">{selectedOrder.cancelReason}</p>
+                </div>
+              )}
               <div className="flex justify-between items-center mb-4">
                 <span className="text-gray-600">Total</span>
                 <span className="font-bold text-xl">${selectedOrder.total.toFixed(2)}</span>
               </div>
               <div className="flex gap-4">
-                <button className="flex-1 bg-gray-800 text-white py-2 rounded-lg flex items-center justify-center gap-2"><TruckIcon className="h-5 w-5" />Track</button>
-                <button className="flex-1 bg-gray-200 text-gray-800 py-2 rounded-lg flex items-center justify-center gap-2"><ArrowUturnLeftIcon className="h-5 w-5" />Refund</button>
+                <button 
+                  onClick={() => setIsTrackingModalOpen(true)}
+                  className="flex-1 bg-gray-800 text-white py-2 rounded-lg flex items-center justify-center gap-2 hover:bg-gray-700"
+                  disabled={selectedOrder?.status === 'Refunded' || selectedOrder?.status === 'Cancelled'}
+                >
+                  <TruckIcon className="h-5 w-5" />
+                  {selectedOrder?.trackingNumber ? 'Update Track' : 'Track'}
+                </button>
+                <button 
+                  onClick={() => setIsRefundModalOpen(true)}
+                  className="flex-1 bg-gray-200 text-gray-800 py-2 rounded-lg flex items-center justify-center gap-2 hover:bg-gray-300"
+                  disabled={selectedOrder?.status === 'Refunded' || selectedOrder?.status === 'Cancelled' || selectedOrder?.status === 'Delivered'}
+                >
+                  <ArrowUturnLeftIcon className="h-5 w-5" />
+                  Refund
+                </button>
               </div>
             </div>
           </div>
         )}
+
+        {/* Modals */}
+        <RefundModal 
+          order={selectedOrder}
+          isOpen={isRefundModalOpen}
+          onClose={() => setIsRefundModalOpen(false)}
+          onRefund={handleUpdateOrder}
+        />
+        
+        <TrackingModal 
+          order={selectedOrder}
+          isOpen={isTrackingModalOpen}
+          onClose={() => setIsTrackingModalOpen(false)}
+          onTrack={handleUpdateOrder}
+        />
       </main>
     </div>
   );

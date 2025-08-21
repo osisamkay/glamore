@@ -28,6 +28,49 @@ const OrderActionsDropdown = ({ order, onUpdateOrder }) => {
     setIsStatusMenuOpen(false);
   };
 
+  const handleAction = async (action) => {
+    let confirmMessage = '';
+    let cancelReason = '';
+
+    switch (action) {
+      case 'confirm':
+        confirmMessage = 'Are you sure you want to confirm this order?';
+        break;
+      case 'cancel':
+        cancelReason = prompt('Please enter the reason for cancelling this order:');
+        if (!cancelReason) return;
+        confirmMessage = 'Are you sure you want to cancel this order?';
+        break;
+      case 'package':
+        confirmMessage = 'Are you sure you want to mark this order as packaged?';
+        break;
+      default:
+        return;
+    }
+
+    if (!confirm(confirmMessage)) return;
+
+    try {
+      const res = await fetch(`/api/admin/orders/${order.id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ 
+          action,
+          refundReason: cancelReason // Using refundReason field for cancel reason
+        }),
+      });
+      if (res.ok) {
+        const updatedOrder = await res.json();
+        onUpdateOrder(updatedOrder);
+      } else {
+        console.error(`Failed to ${action} order`);
+      }
+    } catch (error) {
+      console.error(`Error ${action}ing order:`, error);
+    }
+    setIsOpen(false);
+  };
+
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
@@ -52,9 +95,27 @@ const OrderActionsDropdown = ({ order, onUpdateOrder }) => {
           onClick={(e) => e.stopPropagation()}
         >
           <div className="py-1">
-            <a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Package</a>
-            <a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Confirm Order</a>
-            <a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Cancel Order</a>
+            <button 
+              onClick={() => handleAction('package')}
+              className="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+              disabled={order.status === 'Cancelled' || order.status === 'Refunded'}
+            >
+              Package Order
+            </button>
+            <button 
+              onClick={() => handleAction('confirm')}
+              className="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+              disabled={order.status === 'Cancelled' || order.status === 'Refunded' || order.status === 'Confirmed'}
+            >
+              Confirm Order
+            </button>
+            <button 
+              onClick={() => handleAction('cancel')}
+              className="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+              disabled={order.status === 'Cancelled' || order.status === 'Refunded' || order.status === 'Delivered'}
+            >
+              Cancel Order
+            </button>
             <div 
               onMouseEnter={() => setIsStatusMenuOpen(true)}
               onMouseLeave={() => setIsStatusMenuOpen(false)}

@@ -76,6 +76,13 @@ model Order {
   shipping       Float
   total          Float
   status         String      @default("pending")
+  trackingNumber String?
+  refundReason   String?
+  refundedAt     DateTime?
+  confirmedAt    DateTime?
+  cancelReason   String?
+  cancelledAt    DateTime?
+  packagedAt     DateTime?
   createdAt      DateTime    @default(now())
   updatedAt      DateTime    @updatedAt
   userId         String?

@@ -32,14 +32,14 @@ export default function AdminTopCategories() {
     const centerY = canvas.height / 2;
     const radius = 80;
 
-    const totalQuantity = categories.reduce((sum, cat) => sum + cat._sum.quantity, 0);
+    const totalQuantity = categories.reduce((sum, cat) => sum + parseInt(cat.sales), 0);
     if (totalQuantity === 0) return;
 
     const colors = ['#8b5cf6', '#a855f7', '#c084fc', '#d8b4fe', '#e9d5ff'];
     let currentAngle = -Math.PI / 2;
 
     categories.forEach((segment, index) => {
-      const sliceAngle = (segment._sum.quantity / totalQuantity) * 2 * Math.PI;
+      const sliceAngle = (parseInt(segment.sales) / totalQuantity) * 2 * Math.PI;
       
       ctx.beginPath();
       ctx.arc(centerX, centerY, radius, currentAngle, currentAngle + sliceAngle);
@@ -78,12 +78,12 @@ export default function AdminTopCategories() {
           {categories.map((cat, index) => {
             const colors = ['#8b5cf6', '#a855f7', '#c084fc', '#d8b4fe', '#e9d5ff'];
             return (
-              <div key={cat.category} className="flex items-center justify-between">
+              <div key={cat.name} className="flex items-center justify-between">
                 <div className="flex items-center">
                   <div className={`w-3 h-3 rounded-full mr-2`} style={{ backgroundColor: colors[index % colors.length] }}></div>
-                  <span className="text-sm text-gray-600">{cat.category}</span>
+                  <span className="text-sm text-gray-600">{cat.name}</span>
                 </div>
-                <span className="text-sm font-medium text-gray-800">{cat._sum.quantity}</span>
+                <span className="text-sm font-medium text-gray-800">{cat.sales}</span>
               </div>
             );
           })}
