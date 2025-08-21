@@ -24,3 +24,8 @@
   from = "/product/*"
   to = "/product/:splat"
   status = 200
+
+[[redirects]]
+  from = "/bespoke/*"
+  to = "/bespoke/:splat"
+  status = 200
