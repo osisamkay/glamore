@@ -8,13 +8,9 @@ import CustomMeasurementModal from './CustomMeasurementModal';
 
 export default function ProductInfo({ product, onShowSizeGuide, bespoke = false }) {
 
-  // Handle colors and sizes that may be arrays or comma-separated strings
-  const availableColors = Array.isArray(product.colors) 
-    ? product.colors 
-    : (product.colors ? product.colors.split(',') : [product.color || 'Black']);
-  const availableSizes = Array.isArray(product.sizes)
-    ? product.sizes
-    : (product.sizes ? product.sizes.split(',') : (Array.isArray(product.size) ? product.size : []));
+  // Colors and sizes should now be proper arrays from the API
+  const availableColors = Array.isArray(product.colors) ? product.colors : [product.color || 'Black'];
+  const availableSizes = Array.isArray(product.sizes) ? product.sizes : [];
   
   const [selectedColor, setSelectedColor] = useState(availableColors[0]);
   const [selectedSize, setSelectedSize] = useState(availableSizes[0] || '');
@@ -111,7 +107,9 @@ export default function ProductInfo({ product, onShowSizeGuide, bespoke = false 
           <span className="text-sm text-gray-600">{selectedColor}</span>
         </div>
         <div className="flex flex-wrap gap-3">
+          {console.log(availableColors)}
           {availableColors.map((color) => {
+          
             // Map color names to actual colors for display
             const colorMap = {
               'Black': '#000000',

@@ -19,7 +19,7 @@ export async function GET(request, { params }) {
 
     const product = result[0];
 
-    // Parse colors and sizes from comma-separated strings
+    // Parse colors and sizes from comma-separated strings into proper arrays
     const parsedProduct = {
       ...product,
       colors: product.colors ? product.colors.split(',').map(c => c.trim()) : [],

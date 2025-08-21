@@ -38,10 +38,17 @@ export async function POST(request) {
       `;
     }
 
+    // Parse colors and sizes from comma-separated strings
+    const parsedProducts = products.map(product => ({
+      ...product,
+      colors: product.colors ? product.colors.split(',').map(c => c.trim()) : [],
+      sizes: product.sizes ? product.sizes.split(',').map(s => s.trim()) : []
+    }));
+
     return NextResponse.json({
       success: true,
-      products,
-      count: products.length
+      products: parsedProducts,
+      count: parsedProducts.length
     });
 
   } catch (error) {
@@ -92,8 +99,8 @@ export async function GET(request) {
     // Parse colors and sizes from comma-separated strings
     const parsedProducts = products.map(product => ({
       ...product,
-      colors: product.colors ? product.colors.split(',') : [],
-      sizes: product.sizes ? product.sizes.split(',') : []
+      colors: product.colors ? product.colors.split(',').map(c => c.trim()) : [],
+      sizes: product.sizes ? product.sizes.split(',').map(s => s.trim()) : []
     }));
 
     return NextResponse.json({

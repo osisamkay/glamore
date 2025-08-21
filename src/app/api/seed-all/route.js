@@ -31,7 +31,7 @@ export async function POST() {
     await seedUsers(sql);
     await seedProducts(sql);
     await seedGiftCards(sql);
-    await seedOrders(sql);
+    // await seedOrders(sql); // Orders seeding function not implemented yet
     
     // Verify seeding
     const productCount = await sql`SELECT COUNT(*) as count FROM "Product"`;
@@ -244,8 +244,8 @@ async function seedProducts(sql) {
           ${product.price / 2}, 
           ${product.image}, 
           ${product.category}, 
-          ${JSON.stringify(product.colors)}, 
-          ${JSON.stringify(product.sizes)}, 
+          ${product.colors.join(',')}, 
+          ${product.sizes.join(',')}, 
           ${product.tags.join(', ')}, 
           ${product.quantity}, 
           4.5, 
