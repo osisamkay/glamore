@@ -4,7 +4,9 @@ import CategoryClientPage from '../../components/CategoryClientPage';
 // Fetch products by category from API
 async function getCategoryProducts(category) {
   try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/api/products?category=${category}`, {
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 
+                   (typeof window !== 'undefined' ? window.location.origin : 'https://ggfashions.netlify.app');
+    const res = await fetch(`${baseUrl}/api/products?category=${category}`, {
       cache: 'no-store' // Ensure fresh data
     });
     

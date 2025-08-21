@@ -4,3 +4,23 @@
 
 [[plugins]]
   package = "@netlify/plugin-nextjs"
+
+[functions]
+  node_bundler = "esbuild"
+
+[[headers]]
+  for = "/api/*"
+  [headers.values]
+    Access-Control-Allow-Origin = "*"
+    Access-Control-Allow-Methods = "GET, POST, PUT, DELETE, OPTIONS"
+    Access-Control-Allow-Headers = "Content-Type, Authorization"
+
+[[redirects]]
+  from = "/category/*"
+  to = "/category/:splat"
+  status = 200
+
+[[redirects]]
+  from = "/product/*"
+  to = "/product/:splat"
+  status = 200
